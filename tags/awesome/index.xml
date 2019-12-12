@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Awesome on 无双</title>
+    <link>https://leaxoy.github.io/tags/awesome/</link>
+    <description>Recent content in Awesome on 无双</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Thu, 12 Dec 2019 15:39:53 +0800</lastBuildDate>
+    
+	<atom:link href="https://leaxoy.github.io/tags/awesome/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Go Awesome</title>
+      <link>https://leaxoy.github.io/2019/12/go-awesome-library/</link>
+      <pubDate>Thu, 12 Dec 2019 15:39:53 +0800</pubDate>
+      
+      <guid>https://leaxoy.github.io/2019/12/go-awesome-library/</guid>
+      <description>虽然网上已经有了大量的Awesome相关的资源了，这里为什么还要再来一份呢，原因是网上的虽然大而全，但是很多都是耳熟能详的库，有些库会被埋没</description>
+    </item>
+    
+  </channel>
+</rss>
