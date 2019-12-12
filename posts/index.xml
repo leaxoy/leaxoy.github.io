@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on 无双</title>
-    <link>https://example.com/posts/</link>
+    <link>https://leaxoy.github.io/posts/</link>
     <description>Recent content in Posts on 无双</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Thu, 12 Dec 2019 12:09:45 +0800</lastBuildDate>
     
-	<atom:link href="https://example.com/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://leaxoy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Go json使用的奇技淫巧</title>
-      <link>https://example.com/2019/12/go-advanced-json/</link>
+      <link>https://leaxoy.github.io/2019/12/go-advanced-json/</link>
       <pubDate>Thu, 12 Dec 2019 12:09:45 +0800</pubDate>
       
-      <guid>https://example.com/2019/12/go-advanced-json/</guid>
+      <guid>https://leaxoy.github.io/2019/12/go-advanced-json/</guid>
       <description>基本使用 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 package main import &amp;#34;encoding/json&amp;#34; type A struct { B int C string } func main() { buf, err := json.Marshal(A{B: 1, C: &amp;#34;Hello&amp;#34;}) if err != nil { panic(err) } println(string(buf)) } 修改结果中的key值 1 2 3 4 5 6 package main</description>
     </item>
     
