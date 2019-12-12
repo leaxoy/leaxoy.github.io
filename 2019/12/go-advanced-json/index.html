@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Go json使用的奇技淫巧 | 无双</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="LoveIt 主题演示">
+<link rel="canonical" href="https://example.com/2019/12/go-advanced-json/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go json使用的奇技淫巧"/>
+<meta name="twitter:description" content="基本使用 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 package main import &#34;encoding/json&#34; type A struct { B int C string } func main() { buf, err := json.Marshal(A{B: 1, C: &#34;Hello&#34;}) if err != nil { panic(err) } println(string(buf)) } 修改结果中的key值 1 2 3 4 5 6 package main"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Go json使用的奇技淫巧",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/example.com\/2019\/12\/go-advanced-json\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/example.com\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "Go",
+    
+    "wordcount":  1467 ,
+    "url": "https:\/\/example.com\/2019\/12\/go-advanced-json\/",
+    
+        "datePublished": "2019-12-12T12:09:45\x2b08:00",
+    
+    
+        "dateModified": "2019-12-12T12:09:45\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "XXXX",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/example.com\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://example.com/">无双</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://example.com/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://example.com/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://example.com/categories" title="">分类</a>
+            
+                <a class="menu-item" href="https://example.com/about" title="">关于</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://example.com/">无双</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://example.com/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://example.com/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://example.com/categories" title="">分类</a>
+            
+                <a class="menu-item" href="https://example.com/about" title="">关于</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">Go json使用的奇技淫巧</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://example.com/" rel="author"><i class="fas fa-user-circle fa-fw"></i>李大辉&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://example.com/categories/golang/">Golang</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-12>2019-12-12</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 1467 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 3 分钟&nbsp;</div>
+        </div>
+
+        
+
+        <div class="post-toc" id="post-toc">
+                <h2 class="post-toc-title">目录</h2>
+                <div class="post-toc-content always-active">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">基本使用</a></li>
+    <li><a href="#key">修改结果中的key值</a></li>
+    <li><a href="#heading1">数字转字符串</a></li>
+    <li><a href="#heading2">字段的舍弃</a>
+      <ul>
+        <li><a href="#heading3">去除默认值</a></li>
+        <li><a href="#heading4">强制去除某个属性</a></li>
+      </ul>
+    </li>
+    <li><a href="#marshalerunmarshal">定制Marshaler/Unmarshal</a></li>
+    <li><a href="#heading5">懒惰解析/编码</a></li>
+    <li><a href="#heading6">保留长整型</a></li>
+  </ul>
+</nav>
+                </div>
+            </div>
+            <div class="post-toc-mobile" id="post-toc-mobile">
+                <details>
+                    <summary><div class="post-toc-title"><span>目录</span><span><i class="details icon fas fa-angle-down"></i></span></div></summary>
+                    <div class="post-toc-content">
+                        
+                        
+                        <nav id="TableOfContentsMobile">
+  <ul>
+    <li><a href="#heading">基本使用</a></li>
+    <li><a href="#key">修改结果中的key值</a></li>
+    <li><a href="#heading1">数字转字符串</a></li>
+    <li><a href="#heading2">字段的舍弃</a>
+      <ul>
+        <li><a href="#heading3">去除默认值</a></li>
+        <li><a href="#heading4">强制去除某个属性</a></li>
+      </ul>
+    </li>
+    <li><a href="#marshalerunmarshal">定制Marshaler/Unmarshal</a></li>
+    <li><a href="#heading5">懒惰解析/编码</a></li>
+    <li><a href="#heading6">保留长整型</a></li>
+  </ul>
+</nav>
+                    </div>
+                </details>
+            </div>
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <a class="post-dummy-target" id="heading"></a><h2>基本使用</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;encoding/json&#34;</span>
+
+<span class="kd">type</span> <span class="nx">A</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">B</span> <span class="kt">int</span>
+    <span class="nx">C</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">buf</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">A</span><span class="p">{</span><span class="nx">B</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">C</span><span class="p">:</span> <span class="s">&#34;Hello&#34;</span><span class="p">}</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nb">println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="key"></a><h2>修改结果中的key值</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">type</span> <span class="nx">A</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">B</span> <span class="kt">int</span> <span class="s">`</span><span class="s">json:&#34;rate&#34;</span><span class="s">`</span>
+    <span class="nx">C</span> <span class="kt">string</span> <span class="s">`</span><span class="s">json:&#34;label&#34;</span><span class="s">`</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span><span class="nt">&#34;rate&#34;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="nt">&#34;label&#34;</span><span class="p">:</span> <span class="s2">&#34;request_total&#34;</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="heading1"></a><h2>数字转字符串</h2>
+<p>因为前端js对int64的处理可能会因为溢出导致无法准确处理，因此我们期望可以返回字符串类型。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">type</span> <span class="nx">A</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">B</span> <span class="kt">int</span> <span class="s">`</span><span class="s">json:&#34;,string&#34;</span><span class="s">`</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="heading2"></a><h2>字段的舍弃</h2>
+<a class="post-dummy-target" id="heading3"></a><h3>去除默认值</h3>
+<p>使用<code>omitempty</code>属性用以抛弃掉默认值的字段</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">type</span> <span class="nx">A</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">B</span> <span class="kt">int</span> <span class="s">`</span><span class="s">json:&#34;rate,omitempty&#34;</span><span class="s">`</span>
+    <span class="nx">C</span> <span class="kt">string</span> <span class="s">`</span><span class="s">json:&#34;label,omitempty&#34;</span><span class="s">`</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="err">/</span><span class="err">/</span> <span class="err">c</span><span class="err">a</span><span class="err">s</span><span class="err">e</span> <span class="mi">1</span>
+<span class="p">{</span><span class="nt">&#34;rate&#34;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="nt">&#34;label&#34;</span><span class="p">:</span> <span class="s2">&#34;request_total&#34;</span><span class="p">}</span>
+<span class="err">/</span><span class="err">/</span> <span class="err">c</span><span class="err">a</span><span class="err">s</span><span class="err">e</span> <span class="mi">2</span>
+<span class="p">{</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>当值为默认值时，在最终结果中会被抛弃掉，对于Number类型的<code>0</code>，string类型<code>&quot;&quot;</code>，bool类型<code>false</code>，指针类型的<code>nil</code>，均属于此类。</p>
+</blockquote>
+<a class="post-dummy-target" id="heading4"></a><h3>强制去除某个属性</h3>
+<p>使用<code>-</code>属性强制去除特定的key.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+<span class="kd">type</span> <span class="nx">A</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">B</span> <span class="kt">int</span> <span class="s">`</span><span class="s">json:&#34;rate&#34;</span><span class="s">`</span>
+    <span class="nx">C</span> <span class="kt">string</span> <span class="s">`</span><span class="s">json:&#34;-&#34;</span><span class="s">`</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="marshalerunmarshal"></a><h2>定制<code>Marshaler/Unmarshal</code></h2>
+<p>  在很多case 中，我们需要对结构体进行一些定制，比如枚举类型和string的转换，比如一些属性的预处理，这个时候我们就需要实现自己的<code>Marshal/Unmarshal</code>方法了。
+举一个很常见的例子，在web开发中，数据的ID可能我们并不希望暴露给外界，因此希望可以做一个转换。通常情况下，我们要定义两个结构体，data model 一个，web model一个，中间通过额外的方法来做转换，有多少个结构对就需要多少个转换函数，实在是令人郁闷。</p>
+<p>  那么，对于上面提到的棘手的问题，有没有优雅而又简单的方法解决呢？答案是肯定的，那就是自定义实现<code>Marshal/Unmarshal</code>方法的类型。</p>
+<p><strong>废话不多说，直接上代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">base</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;encoding/json&#34;</span>
+	<span class="s">&#34;strings&#34;</span>
+
+	<span class="s">&#34;github.com/golang/glog&#34;</span>
+	<span class="s">&#34;github.com/speps/go-hashids&#34;</span>
+	<span class="s">&#34;golang.org/x/xerrors&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">seed</span> <span class="o">*</span><span class="nx">hashids</span><span class="p">.</span><span class="nx">HashID</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nf">Init</span><span class="p">(</span><span class="s">&#34;golang-advanced-json&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">Init</span><span class="p">(</span><span class="nx">salt</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">idData</span> <span class="o">:=</span> <span class="nx">hashids</span><span class="p">.</span><span class="nf">NewData</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">idData</span><span class="p">.</span><span class="nx">Salt</span> <span class="p">=</span> <span class="nx">salt</span>
+	<span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+	<span class="nx">seed</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">hashids</span><span class="p">.</span><span class="nf">NewWithData</span><span class="p">(</span><span class="nx">idData</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">glog</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;initialize hash id failed, %s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">ID</span> <span class="kt">int64</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <span class="nx">ID</span><span class="p">)</span> <span class="nf">MarshalText</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="nx">text</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">xerrors</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;err: ID(%d) must greater than 0&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">str</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">seed</span><span class="p">.</span><span class="nf">EncodeInt64</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">int64</span><span class="p">{</span><span class="nb">int64</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="p">}</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="p">[</span><span class="p">]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <span class="o">*</span><span class="nx">ID</span><span class="p">)</span> <span class="nf">UnmarshalText</span><span class="p">(</span><span class="nx">text</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="nx">is</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">seed</span><span class="p">.</span><span class="nf">DecodeInt64WithError</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">xerrors</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;unmarshal id failed, %w&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">is</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">xerrors</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;bad unmarshal id length, %d&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">is</span><span class="p">)</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="o">*</span><span class="nx">i</span> <span class="p">=</span> <span class="nf">ID</span><span class="p">(</span><span class="nx">is</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">)</span>
+	<span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <span class="nx">ID</span><span class="p">)</span> <span class="nf">MarshalJSON</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">text</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">i</span><span class="p">.</span><span class="nf">MarshalText</span><span class="p">(</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <span class="o">*</span><span class="nx">ID</span><span class="p">)</span> <span class="nf">UnmarshalJSON</span><span class="p">(</span><span class="nx">data</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">text</span> <span class="kt">string</span>
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">text</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">i</span><span class="p">.</span><span class="nf">UnmarshalText</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">ParseIDList</span><span class="p">(</span><span class="nx">str</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nx">ID</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">items</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="s">&#34;,&#34;</span><span class="p">)</span>
+	<span class="nx">ids</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nx">ID</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">items</span><span class="p">)</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">item</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">items</span> <span class="p">{</span>
+		<span class="nx">id</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">ID</span><span class="p">)</span>
+		<span class="nx">err</span> <span class="o">:=</span> <span class="nx">id</span><span class="p">.</span><span class="nf">UnmarshalText</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">continue</span>
+		<span class="p">}</span>
+		<span class="nx">ids</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">ids</span><span class="p">,</span> <span class="o">*</span><span class="nx">id</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">ids</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">ParseInt64List</span><span class="p">(</span><span class="nx">str</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">int64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">ids</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">ParseIDList</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">int64s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">int64</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">ids</span><span class="p">)</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">id</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ids</span> <span class="p">{</span>
+		<span class="nx">int64s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">int64s</span><span class="p">,</span> <span class="nb">int64</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">int64s</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">FormatIDList</span><span class="p">(</span><span class="nx">ids</span> <span class="p">[</span><span class="p">]</span><span class="nx">ID</span><span class="p">)</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">items</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">ids</span><span class="p">)</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">id</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ids</span> <span class="p">{</span>
+		<span class="nx">item</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">id</span><span class="p">.</span><span class="nf">MarshalJSON</span><span class="p">(</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">continue</span>
+		<span class="p">}</span>
+		<span class="nx">items</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nb">string</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="s">&#34;,&#34;</span><span class="p">)</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>那么使用呢</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">UserID</span> <span class="nx">base</span><span class="p">.</span><span class="nx">ID</span> <span class="s">`</span><span class="s">json:&#34;userId&#34;</span><span class="s">`</span>
+    <span class="nx">NickName</span> <span class="kt">string</span> <span class="err">`</span><span class="nx">json</span><span class="p">:</span><span class="s">&#34;nickName&#34;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="heading5"></a><h2>懒惰解析/编码</h2>
+<p>有些情况下，我们不能第一时间来判断文档的类型，就无法通过定义结构体来处理文档了，如果使用<code>map[string]interface{}</code>,则会损失类型检查，因此我们希望可以通过文档中某些固定的key，来解析不固定的key</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">type</span> <span class="nx">MessageType</span> <span class="kt">int</span>
+
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">MessageTypeText</span> <span class="nx">MessageType</span> <span class="p">=</span> <span class="kc">iota</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">Message</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">MessageType</span>  <span class="nx">MessageType</span>     <span class="s">`</span><span class="s">json:&#34;messageType&#34;</span><span class="s">`</span>
+	<span class="nx">MessageId</span>    <span class="kt">int64</span>           <span class="s">`</span><span class="s">json:&#34;messageId&#34;</span><span class="s">`</span>
+	<span class="nx">MessageOwner</span> <span class="kt">int64</span>           <span class="s">`</span><span class="s">json:&#34;messageOwner&#34;</span><span class="s">`</span>
+	<span class="nx">Payload</span>      <span class="nx">json</span><span class="p">.</span><span class="nx">RawMessage</span> <span class="s">`</span><span class="s">json:&#34;payload&#34;</span><span class="s">`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">TextMessage</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Text</span> <span class="kt">string</span> <span class="s">`</span><span class="s">json:&#34;text&#34;</span><span class="s">`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">ImageMessage</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Uri</span> <span class="kt">string</span> <span class="s">`</span><span class="s">json:&#34;uri&#34;</span><span class="s">`</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们可以先解析到<code>Message</code>中，然后根据<code>MessageType</code>进行二次解析，这样，既能解析动态文档，也可以保证类型检查不丢失。</p>
+<a class="post-dummy-target" id="heading6"></a><h2>保留长整型</h2>
+<p>默认的json实现中，如果一个数据是长整型，并且对应的go中的数据类型是interface的话，就会产生解析成float64的问题，这个是绝对不能接受的。可以通过如下办法来解决：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;encoding/json&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">NewDecoder</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nb">byte</span><span class="p">(</span><span class="s">`</span><span class="s">{</span><span class="s">&#34;a&#34;: 1234567890987654321}</span><span class="s">`</span><span class="p">)</span><span class="p">)</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nf">UseNumber</span><span class="p">(</span><span class="p">)</span>
+    <span class="nx">res</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{</span><span class="p">}</span><span class="p">)</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nf">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">res</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2019-12-12 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+                    
+                        <span><a class="link-to-markdown" href="https://example.com/2019/12/go-advanced-json/index.md" target="_blank">阅读原始文档</a></span>
+                    
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span>
+    
+        <a href="//twitter.com/share?url=https%3a%2f%2fexample.com%2f2019%2f12%2fgo-advanced-json%2f&amp;text=Go%20json%e4%bd%bf%e7%94%a8%e7%9a%84%e5%a5%87%e6%8a%80%e6%b7%ab%e5%b7%a7&amp;via=" target="_blank" title="Share on Twitter">
+            <i class="fab fa-twitter fa-fw"></i>
+        </a>
+    
+    
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fexample.com%2f2019%2f12%2fgo-advanced-json%2f" target="_blank" title="Share on Facebook">
+            <i class="fab fa-facebook-square fa-fw"></i>
+        </a>
+    
+    
+        <a href="//reddit.com/submit?url=https%3a%2f%2fexample.com%2f2019%2f12%2fgo-advanced-json%2f&amp;title=Go%20json%e4%bd%bf%e7%94%a8%e7%9a%84%e5%a5%87%e6%8a%80%e6%b7%ab%e5%b7%a7" target="_blank" title="Share on Reddit">
+            <i class="fab fa-reddit fa-fw"></i>
+        </a>
+    
+    
+    
+    
+    
+    
+    
+    
+</span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://example.com/tags/go/"><i class="fas fa-tag fa-fw"></i>Go</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://example.com/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2018 - 2019</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://example.com/">李大辉</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+        <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>
