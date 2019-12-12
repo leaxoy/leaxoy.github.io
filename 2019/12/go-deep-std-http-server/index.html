@@ -157,7 +157,7 @@
                     <nav id="TableOfContents">
   <ul>
     <li><a href="#heading">基本使用</a></li>
-    <li><a href="#heading1">基本类型</a></li>
+    <li><a href="#heading-1">基本类型</a></li>
     <li><a href="#server">Server如何启动</a>
       <ul>
         <li></li>
@@ -172,8 +172,8 @@
         <li><a href="#httptimeouthandler">http.TimeoutHandler</a></li>
       </ul>
     </li>
-    <li><a href="#heading2">中间件开发</a></li>
-    <li><a href="#heading3">内置工具方法</a>
+    <li><a href="#heading-2">中间件开发</a></li>
+    <li><a href="#heading-3">内置工具方法</a>
       <ul>
         <li><a href="#httperror">http.Error</a></li>
         <li><a href="#httpnotfound">http.NotFound</a></li>
@@ -196,7 +196,7 @@
                         <nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#heading">基本使用</a></li>
-    <li><a href="#heading1">基本类型</a></li>
+    <li><a href="#heading-1">基本类型</a></li>
     <li><a href="#server">Server如何启动</a>
       <ul>
         <li></li>
@@ -211,8 +211,8 @@
         <li><a href="#httptimeouthandler">http.TimeoutHandler</a></li>
       </ul>
     </li>
-    <li><a href="#heading2">中间件开发</a></li>
-    <li><a href="#heading3">内置工具方法</a>
+    <li><a href="#heading-2">中间件开发</a></li>
+    <li><a href="#heading-3">内置工具方法</a>
       <ul>
         <li><a href="#httperror">http.Error</a></li>
         <li><a href="#httpnotfound">http.NotFound</a></li>
@@ -301,7 +301,7 @@
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><a class="post-dummy-target" id="heading1"></a><h2>基本类型</h2>
+</div><a class="post-dummy-target" id="heading-1"></a><h2>基本类型</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -458,7 +458,7 @@
 <pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/timeout&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">TimeoutHandler</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nf">HandlerFunc</span><span class="p">(</span><span class="nx">handler</span><span class="p">)</span><span class="p">,</span> <span class="mi">1</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span> <span class="s">&#34;Timeout&#34;</span><span class="p">)</span><span class="p">)</span>
 </code></pre></td></tr></table>
 </div>
-</div><a class="post-dummy-target" id="heading2"></a><h2>中间件开发</h2>
+</div><a class="post-dummy-target" id="heading-2"></a><h2>中间件开发</h2>
 <p>得益于良好的API设计，开发一个中间件是非常方便的。一个可能的中间件接口如下:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -485,7 +485,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>标准库中的<code>func StripPrefix(prefix string, h Handler) Handler</code>便可作为一个中间件。</p>
-<a class="post-dummy-target" id="heading3"></a><h2>内置工具方法</h2>
+<a class="post-dummy-target" id="heading-3"></a><h2>内置工具方法</h2>
 <p>HTTP库内置了大量的工具方法，这里选出常用的一些进行解析</p>
 <a class="post-dummy-target" id="httperror"></a><h3>http.Error</h3>
 <p>根据用户指定的错误码进行返回</p>
@@ -753,6 +753,17 @@
 
 
     
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-66543901-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
 </div>
         <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
     </body>

@@ -157,16 +157,16 @@
   <ul>
     <li><a href="#heading">基本使用</a></li>
     <li><a href="#key">修改结果中的key值</a></li>
-    <li><a href="#heading1">数字转字符串</a></li>
-    <li><a href="#heading2">字段的舍弃</a>
+    <li><a href="#heading-1">数字转字符串</a></li>
+    <li><a href="#heading-2">字段的舍弃</a>
       <ul>
-        <li><a href="#heading3">去除默认值</a></li>
-        <li><a href="#heading4">强制去除某个属性</a></li>
+        <li><a href="#heading-3">去除默认值</a></li>
+        <li><a href="#heading-4">强制去除某个属性</a></li>
       </ul>
     </li>
     <li><a href="#marshalerunmarshal">定制Marshaler/Unmarshal</a></li>
-    <li><a href="#heading5">懒惰解析/编码</a></li>
-    <li><a href="#heading6">保留长整型</a></li>
+    <li><a href="#heading-5">懒惰解析/编码</a></li>
+    <li><a href="#heading-6">保留长整型</a></li>
   </ul>
 </nav>
                 </div>
@@ -181,16 +181,16 @@
   <ul>
     <li><a href="#heading">基本使用</a></li>
     <li><a href="#key">修改结果中的key值</a></li>
-    <li><a href="#heading1">数字转字符串</a></li>
-    <li><a href="#heading2">字段的舍弃</a>
+    <li><a href="#heading-1">数字转字符串</a></li>
+    <li><a href="#heading-2">字段的舍弃</a>
       <ul>
-        <li><a href="#heading3">去除默认值</a></li>
-        <li><a href="#heading4">强制去除某个属性</a></li>
+        <li><a href="#heading-3">去除默认值</a></li>
+        <li><a href="#heading-4">强制去除某个属性</a></li>
       </ul>
     </li>
     <li><a href="#marshalerunmarshal">定制Marshaler/Unmarshal</a></li>
-    <li><a href="#heading5">懒惰解析/编码</a></li>
-    <li><a href="#heading6">保留长整型</a></li>
+    <li><a href="#heading-5">懒惰解析/编码</a></li>
+    <li><a href="#heading-6">保留长整型</a></li>
   </ul>
 </nav>
                     </div>
@@ -290,7 +290,7 @@
 <pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span><span class="nt">&#34;rate&#34;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="nt">&#34;label&#34;</span><span class="p">:</span> <span class="s2">&#34;request_total&#34;</span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><a class="post-dummy-target" id="heading1"></a><h2>数字转字符串</h2>
+</div><a class="post-dummy-target" id="heading-1"></a><h2>数字转字符串</h2>
 <p>因为前端js对int64的处理可能会因为溢出导致无法准确处理，因此我们期望可以返回字符串类型。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -308,8 +308,8 @@
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><a class="post-dummy-target" id="heading2"></a><h2>字段的舍弃</h2>
-<a class="post-dummy-target" id="heading3"></a><h3>去除默认值</h3>
+</div><a class="post-dummy-target" id="heading-2"></a><h2>字段的舍弃</h2>
+<a class="post-dummy-target" id="heading-3"></a><h3>去除默认值</h3>
 <p>使用<code>omitempty</code>属性用以抛弃掉默认值的字段</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -347,7 +347,7 @@
 </div><blockquote>
 <p>当值为默认值时，在最终结果中会被抛弃掉，对于Number类型的<code>0</code>，string类型<code>&quot;&quot;</code>，bool类型<code>false</code>，指针类型的<code>nil</code>，均属于此类。</p>
 </blockquote>
-<a class="post-dummy-target" id="heading4"></a><h3>强制去除某个属性</h3>
+<a class="post-dummy-target" id="heading-4"></a><h3>强制去除某个属性</h3>
 <p>使用<code>-</code>属性强制去除特定的key.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -607,7 +607,7 @@
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><a class="post-dummy-target" id="heading5"></a><h2>懒惰解析/编码</h2>
+</div><a class="post-dummy-target" id="heading-5"></a><h2>懒惰解析/编码</h2>
 <p>有些情况下，我们不能第一时间来判断文档的类型，就无法通过定义结构体来处理文档了，如果使用<code>map[string]interface{}</code>,则会损失类型检查，因此我们希望可以通过文档中某些固定的key，来解析不固定的key</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -660,7 +660,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>我们可以先解析到<code>Message</code>中，然后根据<code>MessageType</code>进行二次解析，这样，既能解析动态文档，也可以保证类型检查不丢失。</p>
-<a class="post-dummy-target" id="heading6"></a><h2>保留长整型</h2>
+<a class="post-dummy-target" id="heading-6"></a><h2>保留长整型</h2>
 <p>默认的json实现中，如果一个数据是长整型，并且对应的go中的数据类型是interface的话，就会产生解析成float64的问题，这个是绝对不能接受的。可以通过如下办法来解决：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -888,6 +888,17 @@
 
 
     
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-66543901-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
 </div>
         <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
     </body>
