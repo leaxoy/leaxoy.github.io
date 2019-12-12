@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>深入Go HTTP库 - Server | 无双</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="LoveIt 主题演示">
+<link rel="prev" href="https://leaxoy.github.io/2019/12/go-advanced-json/" />
+<link rel="canonical" href="https://leaxoy.github.io/2019/12/go-deep-std-http-server/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="深入Go HTTP库 - Server"/>
+<meta name="twitter:description" content="代码分析基于Go1.13.4版本，不同版本间可能略有不同，但处理流程是一致的。 基本使用 Go内置了HTTP服务器，用户可以很方便的开发HTTP"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "深入Go HTTP库 - Server",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/leaxoy.github.io\/2019\/12\/go-deep-std-http-server\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/leaxoy.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "Go, HTTP",
+    
+    "wordcount":  1348 ,
+    "url": "https:\/\/leaxoy.github.io\/2019\/12\/go-deep-std-http-server\/",
+    
+        "datePublished": "2019-12-12T13:37:48\x2b08:00",
+    
+    
+        "dateModified": "2019-12-12T13:37:48\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "XXXX",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/leaxoy.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://leaxoy.github.io/">无双</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://leaxoy.github.io/">无双</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">深入Go HTTP库 - Server</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://leaxoy.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>李大辉&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/golang/">Golang</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-12>2019-12-12</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 1348 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 3 分钟&nbsp;</div>
+        </div>
+
+        
+
+        <div class="post-toc" id="post-toc">
+                <h2 class="post-toc-title">目录</h2>
+                <div class="post-toc-content always-active">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">基本使用</a></li>
+    <li><a href="#heading1">基本类型</a></li>
+    <li><a href="#server">Server如何启动</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#handler">内置的Handler类型</a>
+      <ul>
+        <li><a href="#httpfileserver">http.FileServer</a></li>
+        <li><a href="#httpnotfoundhandler">http.NotFoundHandler</a></li>
+        <li><a href="#httpredirecthandler">http.RedirectHandler</a></li>
+        <li><a href="#httpstripprefix">http.StripPrefix</a></li>
+        <li><a href="#httptimeouthandler">http.TimeoutHandler</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">中间件开发</a></li>
+    <li><a href="#heading3">内置工具方法</a>
+      <ul>
+        <li><a href="#httperror">http.Error</a></li>
+        <li><a href="#httpnotfound">http.NotFound</a></li>
+        <li><a href="#httpredirect">http.Redirect</a></li>
+        <li><a href="#httpservecontent">http.ServeContent</a></li>
+        <li><a href="#httpservefile">http.ServeFile</a></li>
+        <li><a href="#httpsetcookie">http.SetCookie</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </div>
+            <div class="post-toc-mobile" id="post-toc-mobile">
+                <details>
+                    <summary><div class="post-toc-title"><span>目录</span><span><i class="details icon fas fa-angle-down"></i></span></div></summary>
+                    <div class="post-toc-content">
+                        
+                        
+                        <nav id="TableOfContentsMobile">
+  <ul>
+    <li><a href="#heading">基本使用</a></li>
+    <li><a href="#heading1">基本类型</a></li>
+    <li><a href="#server">Server如何启动</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#handler">内置的Handler类型</a>
+      <ul>
+        <li><a href="#httpfileserver">http.FileServer</a></li>
+        <li><a href="#httpnotfoundhandler">http.NotFoundHandler</a></li>
+        <li><a href="#httpredirecthandler">http.RedirectHandler</a></li>
+        <li><a href="#httpstripprefix">http.StripPrefix</a></li>
+        <li><a href="#httptimeouthandler">http.TimeoutHandler</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">中间件开发</a></li>
+    <li><a href="#heading3">内置工具方法</a>
+      <ul>
+        <li><a href="#httperror">http.Error</a></li>
+        <li><a href="#httpnotfound">http.NotFound</a></li>
+        <li><a href="#httpredirect">http.Redirect</a></li>
+        <li><a href="#httpservecontent">http.ServeContent</a></li>
+        <li><a href="#httpservefile">http.ServeFile</a></li>
+        <li><a href="#httpsetcookie">http.SetCookie</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                    </div>
+                </details>
+            </div>
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <p><strong>代码分析基于Go1.13.4版本，不同版本间可能略有不同，但处理流程是一致的。</strong></p>
+<a class="post-dummy-target" id="heading"></a><h2>基本使用</h2>
+<p>Go内置了HTTP服务器，用户可以很方便的开发HTTP服务。一个简单的例子如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;net/http&#34;</span>
+
+<span class="kd">type</span> <span class="nx">index</span> <span class="kd">struct</span><span class="p">{</span><span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">w</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;Index&#34;</span><span class="p">)</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">,</span> <span class="nx">index</span><span class="p">{</span><span class="p">}</span><span class="p">)</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/greet&#34;</span><span class="p">,</span> <span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">w</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;Great!!!&#34;</span><span class="p">)</span><span class="p">)</span>
+    <span class="p">}</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">ListenAndServe</span><span class="p">(</span><span class="s">&#34;:3000&#34;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span><span class="p">;</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="heading1"></a><h2>基本类型</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Handler</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">HandlerFunc</span> <span class="kd">func</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span>
+
+<span class="c1">// ServeHTTP calls f(w, r).
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <span class="nx">HandlerFunc</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nf">f</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这是HTTP库中最基本，最重要的一个接口了，接收一个Request，一个ResponseWriter.</p>
+<blockquote>
+<p>  额外的<code>HandlerFunc</code>是go中常用的一种模式，通常情况下，要想实现一个接口，需要定义额外的类型，不过可以通过定义一个对应的Func类型，Func类型实现该接口，只要函数签名一致，用户只需要定义对应的函数即可实现该接口，大幅度的简化了代码。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">ResponseWriter</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">Header</span><span class="p">(</span><span class="p">)</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Header</span>
+    <span class="nf">Write</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="nf">WriteHeader</span><span class="p">(</span><span class="nx">statusCode</span> <span class="kt">int</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>路由</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">muxEntry</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">h</span>       <span class="nx">Handler</span>
+	<span class="nx">pattern</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">ServeMux</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">mu</span>    <span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+    <span class="nx">m</span>     <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">muxEntry</span>
+    <span class="nx">es</span>    <span class="p">[</span><span class="p">]</span><span class="nx">muxEntry</span> <span class="c1">// slice of entries sorted from longest to shortest.
+</span><span class="c1"></span>    <span class="nx">hosts</span> <span class="kt">bool</span>       <span class="c1">// whether any patterns contain hostnames
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">mux</span> <span class="o">*</span><span class="nx">ServeMux</span><span class="p">)</span> <span class="nf">Handler</span><span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">(</span><span class="nx">h</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">,</span> <span class="nx">pattern</span> <span class="kt">string</span><span class="p">)</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">mux</span> <span class="o">*</span><span class="nx">ServeMux</span><span class="p">)</span> <span class="nf">Handle</span><span class="p">(</span><span class="nx">pattern</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">handler</span> <span class="nx">Handler</span><span class="p">)</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">mux</span> <span class="o">*</span><span class="nx">ServeMux</span><span class="p">)</span> <span class="nf">HandleFunc</span><span class="p">(</span><span class="nx">pattern</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">handler</span> <span class="kd">func</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span><span class="p">)</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">mux</span> <span class="o">*</span><span class="nx">ServeMux</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">w</span> <span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">Request</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>ServeMux</code>保存了所有<code>path</code>到<code>handler</code>的映射，<code>Handler</code>方法提供了从<code>Request</code>中获取<code>Handler</code>的功能，<code>Handle</code>注册<code>Handler</code>到<code>ServeMux</code>中，<code>HandleFunc</code>注册<code>HandlerFn</code>到<code>ServeMux</code>中，实现<code>ServeHTTP</code>接口使得<code>ServeMux</code>可以作为<code>Handler</code>传入到另外一个<code>ServeMux</code>中，提供了多级路由嵌套的功能。</p>
+<a class="post-dummy-target" id="server"></a><h2>Server如何启动</h2>
+<a class="post-dummy-target" id="httplistenandservetls"></a><h4>http.ListenAndServe(TLS)</h4>
+<ol>
+<li>通过Addr和Handler初始化http.Server, 然后调用server的ListenAndServe方法</li>
+</ol>
+<a class="post-dummy-target" id="httpserverlistenandservetls"></a><h4>http.Server.ListenAndServe(TLS)</h4>
+<ol>
+<li>监听tcp端口</li>
+<li>死循环监听新的连接，开启新的协程处理</li>
+</ol>
+<p><img src="https://i.loli.net/2019/12/12/92a3i6rQU1ycvEG.png" alt="go-std-http-server-serve.png"></p>
+<a class="post-dummy-target" id="httpconnserve"></a><h4>http.conn.serve</h4>
+<ol>
+<li>判断是否为TLS连接并握手，否则直接进行第二步。</li>
+<li>循环读取Request并处理，见第三步。</li>
+<li>根据Request的path从ServeMux中选择Handler处理。</li>
+</ol>
+<p><img src="https://i.loli.net/2019/12/12/LcKU5XCErBvJo7H.png" alt="go-std-http-conn-serve.png"></p>
+<a class="post-dummy-target" id="handler"></a><h2>内置的Handler类型</h2>
+<p>为了简化用户的开发，HTTP库中内置了一些Handler类型，下面一一解析:</p>
+<a class="post-dummy-target" id="httpfileserver"></a><h3>http.FileServer</h3>
+<p>提供静态资源服务器,短短数行便可提供一个文件服务器，如下，将本地<code>public</code>路径映射到请求的<code>/static</code>路径</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/static&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">FileServer</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nf">Dir</span><span class="p">(</span><span class="s">&#34;public&#34;</span><span class="p">)</span><span class="p">)</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httpnotfoundhandler"></a><h3>http.NotFoundHandler</h3>
+<p>路径找不到时，会调用该中间件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/404&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NotFoundHandler</span><span class="p">(</span><span class="p">)</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httpredirecthandler"></a><h3>http.RedirectHandler</h3>
+<p>客户端重定向。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/301&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">RedirectHandler</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">,</span> <span class="mi">301</span><span class="p">)</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httpstripprefix"></a><h3>http.StripPrefix</h3>
+<p>在将请求定向到你通过参数指定的请求处理器之前，将特定的prefix从URL中过滤出去</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/tmpfiles/&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">StripPrefix</span><span class="p">(</span><span class="s">&#34;/tmpfiles/&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">FileServer</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nf">Dir</span><span class="p">(</span><span class="s">&#34;/tmp&#34;</span><span class="p">)</span><span class="p">)</span><span class="p">)</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httptimeouthandler"></a><h3>http.TimeoutHandler</h3>
+<p>提供一个带有超时时间的<code>Handler</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">Handle</span><span class="p">(</span><span class="s">&#34;/timeout&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">TimeoutHandler</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nf">HandlerFunc</span><span class="p">(</span><span class="nx">handler</span><span class="p">)</span><span class="p">,</span> <span class="mi">1</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span> <span class="s">&#34;Timeout&#34;</span><span class="p">)</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="heading2"></a><h2>中间件开发</h2>
+<p>得益于良好的API设计，开发一个中间件是非常方便的。一个可能的中间件接口如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Middleware</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">Call</span><span class="p">(</span><span class="nx">h</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">)</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">MiddlewareFunc</span> <span class="kd">func</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">)</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <span class="nx">MiddlewareFunc</span><span class="p">)</span> <span class="nf">Call</span><span class="p">(</span><span class="nx">h</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">)</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nf">f</span><span class="p">(</span><span class="nx">h</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>标准库中的<code>func StripPrefix(prefix string, h Handler) Handler</code>便可作为一个中间件。</p>
+<a class="post-dummy-target" id="heading3"></a><h2>内置工具方法</h2>
+<p>HTTP库内置了大量的工具方法，这里选出常用的一些进行解析</p>
+<a class="post-dummy-target" id="httperror"></a><h3>http.Error</h3>
+<p>根据用户指定的错误码进行返回</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httpnotfound"></a><h3>http.NotFound</h3>
+<p>同上面的<code>http.NotFoundHandler</code>, 用户直接调用并返回</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">NotFound</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httpredirect"></a><h3>http.Redirect</h3>
+<p>同上面的<code>http.RedirectHandler</code>, 用户直接调用并返回</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">Redirect</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="s">&#34;https://localhost:9000/some/url&#34;</span><span class="p">,</span> <span class="mi">301</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httpservecontent"></a><h3>http.ServeContent</h3>
+<p>提供了用户下载的功能，支持断点续传</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">ServeContent</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="s">&#34;file.dat&#34;</span><span class="p">,</span> <span class="nx">fileLastModTime</span><span class="p">,</span> <span class="nx">fileSeekReader</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httpservefile"></a><h3>http.ServeFile</h3>
+<p>同<code>http.ServeContent</code>，不支持断点续传</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">ServeFile</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">fileName</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="httpsetcookie"></a><h3>http.SetCookie</h3>
+<p>设置<code>Response</code>的<code>Cookie</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">http</span><span class="p">.</span><span class="nf">SetCookie</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">cookiePtr</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2019-12-12 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span>
+    
+        <a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-http-server%2f&amp;text=%e6%b7%b1%e5%85%a5Go%20HTTP%e5%ba%93%20-%20Server&amp;via=" target="_blank" title="Share on Twitter">
+            <i class="fab fa-twitter fa-fw"></i>
+        </a>
+    
+    
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-http-server%2f" target="_blank" title="Share on Facebook">
+            <i class="fab fa-facebook-square fa-fw"></i>
+        </a>
+    
+    
+        <a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-http-server%2f&amp;title=%e6%b7%b1%e5%85%a5Go%20HTTP%e5%ba%93%20-%20Server" target="_blank" title="Share on Reddit">
+            <i class="fab fa-reddit fa-fw"></i>
+        </a>
+    
+    
+    
+    
+    
+    
+    
+    
+</span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://leaxoy.github.io/tags/go/"><i class="fas fa-tag fa-fw"></i>Go</a>
+                    </span>
+                
+                    <span class="tag">
+                        <a href="https://leaxoy.github.io/tags/http/"><i class="fas fa-tag fa-fw"></i>HTTP</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://leaxoy.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://leaxoy.github.io/2019/12/go-advanced-json/" class="prev" rel="prev" title="Go json使用的奇技淫巧"><i class="fas fa-angle-left fa-fw"></i>Go json使用的奇技淫巧</a>
+        
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2018 - 2019</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/">李大辉</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+        <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>

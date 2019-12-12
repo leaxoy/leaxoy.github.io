@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 12 Dec 2019 12:09:45 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Dec 2019 13:37:48 +0800</lastBuildDate>
     
 	<atom:link href="https://leaxoy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>深入Go HTTP库 - Server</title>
+      <link>https://leaxoy.github.io/2019/12/go-deep-std-http-server/</link>
+      <pubDate>Thu, 12 Dec 2019 13:37:48 +0800</pubDate>
+      
+      <guid>https://leaxoy.github.io/2019/12/go-deep-std-http-server/</guid>
+      <description>代码分析基于Go1.13.4版本，不同版本间可能略有不同，但处理流程是一致的。 基本使用 Go内置了HTTP服务器，用户可以很方便的开发HTTP</description>
+    </item>
     
     <item>
       <title>Go json使用的奇技淫巧</title>
