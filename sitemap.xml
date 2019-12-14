@@ -3,7 +3,105 @@
         <url>
             <loc>https://leaxoy.github.io/categories/</loc>
             
-                <lastmod>2019-12-12T16:27:11+08:00</lastmod>
+                <lastmod>2019-12-14T11:22:52+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/tags/database/</loc>
+            
+                <lastmod>2019-12-14T11:22:52+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/tags/go/</loc>
+            
+                <lastmod>2019-12-14T11:22:52+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/categories/golang/</loc>
+            
+                <lastmod>2019-12-14T11:22:52+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/posts/</loc>
+            
+                <lastmod>2019-12-14T11:22:52+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/tags/</loc>
+            
+                <lastmod>2019-12-14T11:22:52+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/</loc>
+            
+                <lastmod>2019-12-14T11:22:52+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/2019/12/go-deep-std-database/</loc>
+            
+                <lastmod>2019-12-14T11:22:52+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -30,48 +128,6 @@
     
         <url>
             <loc>https://leaxoy.github.io/tags/im/</loc>
-            
-                <lastmod>2019-12-12T16:27:11+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/posts/</loc>
-            
-                <lastmod>2019-12-12T16:27:11+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/tags/</loc>
-            
-                <lastmod>2019-12-12T16:27:11+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/</loc>
             
                 <lastmod>2019-12-12T16:27:11+08:00</lastmod>
             
@@ -113,35 +169,7 @@
         </url>
     
         <url>
-            <loc>https://leaxoy.github.io/tags/go/</loc>
-            
-                <lastmod>2019-12-12T15:39:53+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
             <loc>https://leaxoy.github.io/2019/12/go-awesome-library/</loc>
-            
-                <lastmod>2019-12-12T15:39:53+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/categories/golang/</loc>
             
                 <lastmod>2019-12-12T15:39:53+08:00</lastmod>
             

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Database on 无双</title>
+    <link>https://leaxoy.github.io/tags/database/</link>
+    <description>Recent content in Database on 无双</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Sat, 14 Dec 2019 11:22:52 +0800</lastBuildDate>
+    
+	<atom:link href="https://leaxoy.github.io/tags/database/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>深入Go标准库之 Database</title>
+      <link>https://leaxoy.github.io/2019/12/go-deep-std-database/</link>
+      <pubDate>Sat, 14 Dec 2019 11:22:52 +0800</pubDate>
+      
+      <guid>https://leaxoy.github.io/2019/12/go-deep-std-database/</guid>
+      <description>很多应用都离不开数据库的访问与操作，在JAVA中，我们通常使用Mybatis来进行数据库操作，在Python中，通常会使用SQLAlchem</description>
+    </item>
+    
+  </channel>
+</rss>
