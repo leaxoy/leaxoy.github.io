@@ -18,7 +18,7 @@
       <pubDate>Thu, 12 Dec 2019 16:27:11 +0800</pubDate>
       
       <guid>https://leaxoy.github.io/2019/12/im-architecture/</guid>
-      <description>TODO:</description>
+      <description>这篇属于IM三剑客中的一篇，后面两篇主要着重介绍了MQTT协议以及MQTT Broker的Go语言实现，如果没有这类需求的话可以跳过。 Mqtt</description>
     </item>
     
   </channel>

@@ -19,7 +19,7 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="通用IM架构"/>
-<meta name="twitter:description" content="TODO:"/>
+<meta name="twitter:description" content="这篇属于IM三剑客中的一篇，后面两篇主要着重介绍了MQTT协议以及MQTT Broker的Go语言实现，如果没有这类需求的话可以跳过。 Mqtt"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
@@ -41,7 +41,7 @@
     
         "keywords": "IM",
     
-    "wordcount":  1 ,
+    "wordcount":  3693 ,
     "url": "https:\/\/leaxoy.github.io\/2019\/12\/im-architecture\/",
     
         "datePublished": "2019-12-12T16:27:11\x2b08:00",
@@ -139,14 +139,14 @@
                 <a class="author" href="https://leaxoy.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>李大辉&nbsp;</a>
                 <span class="post-category">
                         收录于
-                        <i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/design/">Design</a>
+                        <i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/system/">System</a>
                             
                     </span>
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-12>2019-12-12</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 1 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>预计阅读 1 分钟&nbsp;</div>
+                <i class="fas fa-pencil-alt fa-fw"></i>约 3693 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 8 分钟&nbsp;</div>
         </div>
 
         
@@ -154,7 +154,47 @@
         <div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">目录</h2>
                 <div class="post-toc-content always-active">
-                    <nav id="TableOfContents"></nav>
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#transport">Transport层</a></li>
+    <li><a href="#heading">协议</a></li>
+    <li><a href="#heading-1">服务质量</a></li>
+    <li><a href="#heading-2">服务端设计</a>
+      <ul>
+        <li><a href="#auth">认证服务器(Auth)</a></li>
+        <li><a href="#gateway">接入层(Gateway)</a></li>
+        <li><a href="#router">路由层(Router)</a></li>
+        <li><a href="#service">服务层(Service)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-8">扩容</a>
+      <ul>
+        <li><a href="#heading-9">接入层扩容</a></li>
+        <li><a href="#heading-10">路由层扩容</a></li>
+        <li><a href="#heading-13">服务层扩容</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-14">重启</a>
+      <ul>
+        <li><a href="#heading-15">接入层</a></li>
+        <li><a href="#heading-16">路由层</a></li>
+        <li><a href="#heading-17">服务层</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-18">离线消息</a>
+      <ul>
+        <li><a href="#heading-19">客户端推拉结合+业务处理</a></li>
+        <li><a href="#heading-20">接入层持久化离线消息</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-21">消息去重</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading-24">消息投递</a></li>
+  </ul>
+</nav>
                 </div>
             </div>
             <div class="post-toc-mobile" id="post-toc-mobile">
@@ -163,7 +203,47 @@
                     <div class="post-toc-content">
                         
                         
-                        <nav id="TableOfContentsMobile"></nav>
+                        <nav id="TableOfContentsMobile">
+  <ul>
+    <li><a href="#transport">Transport层</a></li>
+    <li><a href="#heading">协议</a></li>
+    <li><a href="#heading-1">服务质量</a></li>
+    <li><a href="#heading-2">服务端设计</a>
+      <ul>
+        <li><a href="#auth">认证服务器(Auth)</a></li>
+        <li><a href="#gateway">接入层(Gateway)</a></li>
+        <li><a href="#router">路由层(Router)</a></li>
+        <li><a href="#service">服务层(Service)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-8">扩容</a>
+      <ul>
+        <li><a href="#heading-9">接入层扩容</a></li>
+        <li><a href="#heading-10">路由层扩容</a></li>
+        <li><a href="#heading-13">服务层扩容</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-14">重启</a>
+      <ul>
+        <li><a href="#heading-15">接入层</a></li>
+        <li><a href="#heading-16">路由层</a></li>
+        <li><a href="#heading-17">服务层</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-18">离线消息</a>
+      <ul>
+        <li><a href="#heading-19">客户端推拉结合+业务处理</a></li>
+        <li><a href="#heading-20">接入层持久化离线消息</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-21">消息去重</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading-24">消息投递</a></li>
+  </ul>
+</nav>
                     </div>
                 </details>
             </div>
@@ -194,7 +274,136 @@
             
             
             
-            <p>TODO:</p>
+            <blockquote>
+<p>这篇属于IM三剑客中的一篇，后面两篇主要着重介绍了MQTT协议以及MQTT Broker的Go语言实现，如果没有这类需求的话可以跳过。</p>
+<ul>
+<li><a href="https://leaxoy.github.io/2019/12/mqtt-protocol/">Mqtt协议解析</a></li>
+<li><a href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/">Go实现Mqtt broker</a></li>
+</ul>
+</blockquote>
+<p>  每天用的微信，上班打卡的钉钉，都属于一个IM应用，虽然这些应用与我们息息相关，但是具体的实现对于很多人来说却是比较陌生的。
+因此，我在这里专门写一篇文章来说明一下通用的结构与设计，权当是抛砖引玉了。</p>
+<p>  不同于常见的http应用，IM属于一个长链接应用，普通的http应用的请求模型是一问(客户端)一答(服务端)，即使是HTTP2也是这个模型，对于IM的长链接模型，则是问可能没有答，没有问也可以有答，很多人就要问是怎么实现的了，说来也简单，只要在客户端初始化好后，不断开连接，之后所有的通信都用这条连接来完成即可。</p>
+<p><strong>下面将从底层网络选型，协议选型，到服务质量，再到服务端的设计来一一说明</strong></p>
+<a class="post-dummy-target" id="transport"></a><h2>Transport层</h2>
+<p>通常情况下，传输层一般有两种协议, TCP和UDP. 在一个可靠消息系统中，我们应该从底层开始就保证可靠，因此这里采用TCP模型。</p>
+<blockquote>
+<p>当然传说QQ底层用的就是UDP，原因无外乎就是性能考虑，但是具体原因我也不是很清楚，如果基于了UDP的话，还要在业务中实现ack机制，相对来说比较复杂，因此不考虑UDP。</p>
+</blockquote>
+<a class="post-dummy-target" id="heading"></a><h2>协议</h2>
+<p>有了底层的传输层，接下来我们还要有我们的协议，协议定义了该以什么样的结构来表示我们的数据。主要的聊天协议主要有如下几种：</p>
+<ul>
+<li>XMPP，老，且臃肿，第一个排除。</li>
+<li>MQTT，轻量，语义丰富，可以使用第三方的MQTT server(但是不推荐在IM中使用第三方的MQTT Server，原因后面会提及)</li>
+<li>私有协议，定制化程度高，但是难度也大。</li>
+</ul>
+<p>因此，我们更偏向与MQTT协议或者私有协议。</p>
+<a class="post-dummy-target" id="heading-1"></a><h2>服务质量</h2>
+<ul>
+<li>至多一次(<code>AT MOST ONCE</code>) <code>QOS0</code></li>
+</ul>
+<ul>
+<li>至少一次(<code>AT LEAST ONCE</code>) <code>QOS1</code></li>
+<li>恰好一次(<code>EXACTLY ONCE</code>) <code>QOS2</code></li>
+</ul>
+<p>  在IM系统中，消息的丢失几乎是无可忍受的，因此首先排除掉了<code>QOS0</code>的服务质量，同时因为<code>QOS2</code>需要至少四次通信（对于MQTT来说分别是：<code>PUBLISH</code>, <code>PUBREC</code>, <code>PUBREL</code>, <code>PUBCOMP</code>），成本相对来说比较大，因此一般情况下，也不会直接使用<code>QOS2</code>，剩下的只有<code>QOS1</code>，字面上看<code>AT LEAST ONCE</code>至少一次，可以满足消息必达，同时最少只需要两次通信即可(一次Publish，一次Ack即可)。</p>
+<a class="post-dummy-target" id="heading-2"></a><h2>服务端设计</h2>
+<a class="post-dummy-target" id="auth"></a><h3>认证服务器(Auth)</h3>
+<p>  登录用户携带<code>Cookie</code>, <code>Session</code>或者<code>Token</code>向认证服务器(<code>HTTP</code>)发起认证请求。认证服务器通过用户携带的信息进行认证操作，认证成功则将接入层地址，<code>Auth Token</code>返回给客户端，客户端向接入层发起连接请求。连接成功后，发送<code>Auth</code>信息，认证成功后，马上发送一次<code>Ping</code>消息。</p>
+<a class="post-dummy-target" id="gateway"></a><h3>接入层(Gateway)</h3>
+<p>接入层主要处理客户端的长链接，消息，服务端分发的消息等，同时向路由层更新用户信息。</p>
+<a class="post-dummy-target" id="heading-3"></a><h4>用户接入</h4>
+<p>  用户接入后，会马上发送<code>Auth</code>信息过来，服务端通过对应的<code>Auth</code>插件进行认证，如果认证成功，则<code>Ack success</code>，如果失败，<code>Ack failure</code>，并退出。然后尝试将用户的接入信息Report到路由层，同时loop循环读取客户端消息并处理。</p>
+<a class="post-dummy-target" id="heading-4"></a><h4>用户加入房间</h4>
+<p>  用户发送业务消息，QOS为1，类型为<code>JoinRoom</code>，参数为房间ID，接入层保存有当前实例上的所有房间，根据房间ID找到对应的房间，并加入，同时给客户端<code>ack success</code>并Report到路由层。该消息幂等，可以调用多次。</p>
+<a class="post-dummy-target" id="heading-5"></a><h4>用户离开</h4>
+<p>  客户端发送Disconnect消息，或者超时断连，服务端删除对应的记录同时Report到路由层。</p>
+<a class="post-dummy-target" id="heading-6"></a><h4>用户状态保活</h4>
+<p>  通常来说客户端是不可靠的，可能随时失联，失效，因此需要保活机制来确认客户端的状态，同时即使踢出失效的连接，避免服务器资源的浪费。服务端收到客户端的<code>Ping</code>请求后，马上回复<code>Pong</code>消息，因为客户端在收不到<code>Pong</code>消息时，会认为服务端已经不可用，会尝试重连，这一步是不必的。</p>
+<a class="post-dummy-target" id="heading-7"></a><h4>客户端消息处理</h4>
+<p>对于系统消息，获取后做一个计数。对于业务消息，获取后，并通过Bridge模块路由到对应的业务中。</p>
+<blockquote>
+<p>服务端认为的超时时间为2倍Keepalive时间，通常不大于运营商的缓存时间。</p>
+</blockquote>
+<a class="post-dummy-target" id="router"></a><h3>路由层(Router)</h3>
+<p>存储用户连接信息，主要存储以下三类信息</p>
+<ul>
+<li><code>user_id =&gt; server_id</code></li>
+<li><code>user_id =&gt; room_id</code></li>
+<li><code>room_id =&gt; set&lt;server_id&gt;</code></li>
+</ul>
+<p>接入层是无状态的，很难知道全局的连接状态，因此需要一个单独的路由层来存储状态信息。</p>
+<a class="post-dummy-target" id="store"></a><h4>状态存储(Store)</h4>
+<ul>
+<li>基于第三方的存储，比如基于Redis
+<ul>
+<li>优点是简单，可靠，省去了开发存储的时间精力。</li>
+<li>缺点是需要一次网络请求，会造成一定的性能损耗。</li>
+</ul>
+</li>
+<li>基于Raft等一致性算法的本地存储。
+<ul>
+<li>优点是本地存储，且强一致，省去了网络的开销。</li>
+<li>缺点是需要实现一致性算法，比较麻烦，不过好在已经有了成熟的Raft实现，比如ETCD的实现，能省下不少事。</li>
+</ul>
+</li>
+</ul>
+<a class="post-dummy-target" id="service"></a><h3>服务层(Service)</h3>
+<p>  接收上游服务的请求，根据上有的请求向路由层请求状态信息，得到消息应当发送到哪些接入层实例上，然后向对应的接入层实例投递消息，起到了承上启下的作用。</p>
+<p>  服务层需要感知路由层与接入层的存在，可以通过Etcd注册中心来实现服务的注册与发现。</p>
+<p>  服务层既可以作为一个单独的服务而存在，也可以作为Lib存在(嵌入到用户的程序中)，可以减少一次网络开销。</p>
+<a class="post-dummy-target" id="heading-8"></a><h2>扩容</h2>
+<p>扩容是服务端服务通向高并发的一个必由之路。</p>
+<a class="post-dummy-target" id="heading-9"></a><h3>接入层扩容</h3>
+<p>接入层是无状态的，所有的路由状态存储在了路由层组件上，因此可以直接通过加机器的方式扩容，在实例Ready之后，将实例信息注册到服务中心上即可。</p>
+<a class="post-dummy-target" id="heading-10"></a><h3>路由层扩容</h3>
+<p>路由层存储了用户状态信息，因此在扩容上略微麻烦一些，根据存储的类型分为两类。</p>
+<a class="post-dummy-target" id="heading-11"></a><h4>存储层是第三方时</h4>
+<p>路由层可以直接扩容，扩容的难点移动到了第三方的存储层上，如果是Redis的话，可以使用Redis的Cluter模式(Redis 3之后均支持)。</p>
+<a class="post-dummy-target" id="heading-12"></a><h4>存储层是本地时</h4>
+<p>如果是本地存储扩容的话，</p>
+<a class="post-dummy-target" id="heading-13"></a><h3>服务层扩容</h3>
+<p>服务层同接入层一样是无状态的，因此可以和接入层一样扩容。</p>
+<a class="post-dummy-target" id="heading-14"></a><h2>重启</h2>
+<a class="post-dummy-target" id="heading-15"></a><h3>接入层</h3>
+<p>所有的组件中重启最麻烦的是接入层，接入层的重启意味着大量连接的失效以及大量的并发的connect消息，因此必然不能直接重启整个集群，只能one by one的重启。过程如下</p>
+<ol>
+<li>从nginx中摘除对应的实例，新的连接不会接入进来</li>
+<li>发送重启信号给接入层实例</li>
+<li>接收到信号后，广播一条重连的消息给客户端，客户端断掉连接重连，因为第一步的操作，再次连接无法接入</li>
+<li>等待一段时间或者剩余连接数小于阈值后，即可重启</li>
+<li>在nginx加入实例，新的连接可以重新接入</li>
+</ol>
+<a class="post-dummy-target" id="heading-16"></a><h3>路由层</h3>
+<p>基于状态存储的方式，具体的重启策略也不尽相同，如果是用的第三方的存储方案，则可以简单的进行重启。如果用的是本地存储的话，Raft算法可以保证在集群可用节点数超过一半时是可用的，因此可以采用一台一台的方式进行重启。</p>
+<a class="post-dummy-target" id="heading-17"></a><h3>服务层</h3>
+<a class="post-dummy-target" id="heading-18"></a><h2>离线消息</h2>
+<p>当用户不在线时，投递给用户的消息主要有两种处理方式</p>
+<a class="post-dummy-target" id="heading-19"></a><h3>客户端推拉结合+业务处理</h3>
+<p>  离线消息拉，在线消息推，此时不需要处理离线消息，对应的业务去处理。对于一个群的消息，业务层需要对所有消息进行存储，当客户端再次登录时，先从业务方拉取历史消息，待消息拉取完毕后，开始处理长链接的消息。</p>
+<a class="post-dummy-target" id="heading-20"></a><h3>接入层持久化离线消息</h3>
+<p>  待到重新接入后，将离线期间的消息依次推送给客户端。对于每一个连接，都需要存在一个对应的队列来保存未接收消息，通常情况下是每个连接对应的一个结构体中有一个queue的变量。But，长链接总归是要有重启操作的，因此所有的消息都需要进行落盘操作，才能保证在接入层重启后消息不丢失，对应的结构为<code>user_id, msg</code>二元组，结构比较简单，同时数据量也会比较大，因此我们可以采用分布式KV的存储结构，<code>TiKV</code>就是一个不错的选择，基于<code>Rust</code>和<code>RocksDB</code>构建，原生的分布式支持，适用于存储大量的数据。</p>
+<blockquote>
+<p>  接入层持久化消息将复杂度转移到了接入层，大幅度的简化了业务的开发与接入成本。推拉结合的方式将问题保留给客户端和业务方，但是接入层可以更加轻量。具体使用哪种方式还要根据具体场景进行深度的分析。</p>
+</blockquote>
+<a class="post-dummy-target" id="heading-21"></a><h2>消息去重</h2>
+<p>  上面说了我们选定了<code>QOS1</code>(至少投递一次)的服务质量级别，但是也会出现一个问题：消息可能会重复，同时也给出了思路，那么具体如何实现呢，我们一一分析。</p>
+<a class="post-dummy-target" id="heading-22"></a><h4>客户端发送消息</h4>
+<p>为了保证服务端肯定收到消息，我们需要多次尝试直至收到服务端的ack。下面又分了三种情况：</p>
+<ul>
+<li>在重发消息之前收到ack，这时我们只需要简单的取消掉重发的任务即可。</li>
+<li>在重发消息之后收到ack，这种情况下，我们又要分成两种情况来考虑。
+<ul>
+<li>Publish消息丢失了，此时只要等待超时重传即可。</li>
+<li>Ack消息丢失了，这时服务端以收到消息，但是因为各种原因，ack消息丢失了，这种情况下，需要服务端对消息进行去重了，通过一个LRU Cache，保存最近的一部分消息，每次收到客户端消息后，先进行去重。</li>
+</ul>
+</li>
+<li>迟迟未能收到ack，有可能是客户端网络出现问题，也有可能服务端无法提供更多的服务能力了，在这种情况下，我们要取消发送，并进行相应的记录。</li>
+</ul>
+<a class="post-dummy-target" id="heading-23"></a><h4>服务端发送消息</h4>
+<p>处理流程同客户端发送，只要将两端的关系逆转过来即可。</p>
+<a class="post-dummy-target" id="heading-24"></a><h2>消息投递</h2>
+<p>  整个系统基于RPC系统进行消息的投递，RPC的同步风格可以保证第一时间获知成功失败状态，同时相对于HTTP性能更高，相对于TCP更加方便。</p>
 
         </div>
 

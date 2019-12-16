@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>移动应用 on 无双</title>
+    <link>https://leaxoy.github.io/tags/%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8/</link>
+    <description>Recent content in 移动应用 on 无双</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Sat, 14 Dec 2019 18:17:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://leaxoy.github.io/tags/%E7%A7%BB%E5%8A%A8%E5%BA%94%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Flutter Startup</title>
+      <link>https://leaxoy.github.io/2019/12/flutter-startup/</link>
+      <pubDate>Sat, 14 Dec 2019 18:17:35 +0800</pubDate>
+      
+      <guid>https://leaxoy.github.io/2019/12/flutter-startup/</guid>
+      <description>之前一直想独立完成一个产品，奈何每次都死在了客户端上，iOS/Android两个主要的平台各自为战，学习两套对于后端来说几乎是不太可能的，虽</description>
+    </item>
+    
+  </channel>
+</rss>
