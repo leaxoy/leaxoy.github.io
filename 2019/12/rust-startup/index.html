@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Rust初探 | 无双</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="LoveIt 主题演示">
+<link rel="prev" href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" />
+<link rel="canonical" href="https://leaxoy.github.io/2019/12/rust-startup/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Rust初探"/>
+<meta name="twitter:description" content="看到这个标题，可能要有人问了，现在的编程语言已经那么多了，为什么还要在学一门，再学一门可以让我涨工资吗，这个语言比现有的语言好在哪里呢？这个"/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Rust初探",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/leaxoy.github.io\/2019\/12\/rust-startup\/"
+    },
+    
+        "image": {
+            "@type": "ImageObject",
+            "url": "https:\/\/leaxoy.github.io\/cover.png",
+            "width":  800 ,
+            "height":  600 
+        },
+    
+    "genre": "posts",
+    
+        "keywords": "Rust",
+    
+    "wordcount":  911 ,
+    "url": "https:\/\/leaxoy.github.io\/2019\/12\/rust-startup\/",
+    
+        "datePublished": "2019-12-16T20:19:16\x2b08:00",
+    
+    
+        "dateModified": "2019-12-16T20:19:16\x2b08:00",
+    
+    
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+    
+    
+        "publisher": {
+            "@type": "Organization",
+            "name": "李大辉",
+            "logo": {
+            "@type": "ImageObject",
+            "url": "https:\/\/leaxoy.github.io\/logo.png",
+            "width":  127 ,
+            "height":  40 
+            }
+        },
+    
+    
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://leaxoy.github.io/">无双</a>
+        </div>
+        <div class="navbar-menu">
+            
+            
+                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://leaxoy.github.io/">无双</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+            
+            
+                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
+            
+                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
+            
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+                    
+    
+    
+    
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">Rust初探</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://leaxoy.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>李大辉&nbsp;</a>
+                <span class="post-category">
+                        收录于
+                        <i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/rust/">Rust</a>
+                            
+                    </span>
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-16>2019-12-16</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 911 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 2 分钟&nbsp;</div>
+        </div>
+
+        
+
+        <div class="post-toc" id="post-toc">
+                <h2 class="post-toc-title">目录</h2>
+                <div class="post-toc-content always-active">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">安装</a></li>
+    <li><a href="#heading-1">起步</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading-2">特色</a>
+      <ul>
+        <li><a href="#runtime">无Runtime</a></li>
+        <li><a href="#heading-3">零开销抽象</a></li>
+        <li><a href="#heading-4">无空指针</a></li>
+        <li><a href="#gc">无需手动释放内存/无GC</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-5">领域</a>
+      <ul>
+        <li><a href="#heading-6">数据库</a></li>
+        <li><a href="#heading-7">图像</a></li>
+        <li><a href="#heading-8">网关</a></li>
+        <li><a href="#heading-9">游戏</a></li>
+        <li><a href="#heading-10">音视频处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-11">和其他语言对比</a>
+      <ul>
+        <li><a href="#c">C++</a></li>
+        <li><a href="#go">Go</a></li>
+        <li><a href="#java">Java</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </div>
+            <div class="post-toc-mobile" id="post-toc-mobile">
+                <details>
+                    <summary><div class="post-toc-title"><span>目录</span><span><i class="details icon fas fa-angle-down"></i></span></div></summary>
+                    <div class="post-toc-content">
+                        
+                        
+                        <nav id="TableOfContentsMobile">
+  <ul>
+    <li><a href="#heading">安装</a></li>
+    <li><a href="#heading-1">起步</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading-2">特色</a>
+      <ul>
+        <li><a href="#runtime">无Runtime</a></li>
+        <li><a href="#heading-3">零开销抽象</a></li>
+        <li><a href="#heading-4">无空指针</a></li>
+        <li><a href="#gc">无需手动释放内存/无GC</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-5">领域</a>
+      <ul>
+        <li><a href="#heading-6">数据库</a></li>
+        <li><a href="#heading-7">图像</a></li>
+        <li><a href="#heading-8">网关</a></li>
+        <li><a href="#heading-9">游戏</a></li>
+        <li><a href="#heading-10">音视频处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-11">和其他语言对比</a>
+      <ul>
+        <li><a href="#c">C++</a></li>
+        <li><a href="#go">Go</a></li>
+        <li><a href="#java">Java</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                    </div>
+                </details>
+            </div>
+
+        <div class="post-content">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <p>  看到这个标题，可能要有人问了，现在的编程语言已经那么多了，为什么还要在学一门，再学一门可以让我涨工资吗，这个语言比现有的语言好在哪里呢？这个问题我回答不了，但是时间会告诉你答案。</p>
+<p>  为什么突然想写这个了呢，一是最近把荒废了三年之久的博客有从新捡了起来，二是<code>Rust</code>最近发布了稳定的<code>Async/Await</code>功能(之前Block长达一年之久，我也等待了一年之久😂)，生态也在开始迁移了，二者缺一不可。</p>
+<a class="post-dummy-target" id="heading"></a><h2>安装</h2>
+<p>  推荐使用<code>rustup</code>来安装使用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">curl --proto <span class="s1">&#39;=https&#39;</span> --tlsv1.2 -sSf https://sh.rustup.rs <span class="p">|</span> sh
+</code></pre></td></tr></table>
+</div>
+</div><p>安装过程中可能要选择版本，系统等信息，如果不晓得自己需要用啥，直接用默认的就好。经过一段时间的运行后，安装脚本会退出，使用下面的命令检查是否安装成功。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">rustc -V
+</code></pre></td></tr></table>
+</div>
+</div><p>如果正确安装后，应该输出<code>rust</code>的版本号，就目前来说，输出的应该是<code>rustc 1.39.0 (4560ea788 2019-11-04)</code>，看到这个输出，意味着已经完成了rust的安装，恭喜你，你已经完成90%了，😏。</p>
+<a class="post-dummy-target" id="heading-1"></a><h2>起步</h2>
+<p>不同于Golang和Python，Rust自带了一个功能非常强大的管理工具<code>Cargo</code>，生成项目，管理项目/以来，交叉编译/打包。下面我们就开始吧：</p>
+<p>生成一个新的项目:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">cargo new my_first_rust_app
+<span class="nb">cd</span> my_first_rust_app
+cargo run
+</code></pre></td></tr></table>
+</div>
+</div><p>这条命令会生成一个简单的模版项目,并且运行相应的代码，可以看到命令行中已经出现<code>Hello, world!</code>,恭喜你，你已经掌握了Rust了。</p>
+<p>我们看一下项目中的文件。</p>
+<p>src/main.rs</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-rust" data-lang="rust"><span class="k">fn</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="w"></span><span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&#34;Hello, world!&#34;</span><span class="p">)</span><span class="p">;</span><span class="w">
+</span><span class="w"></span><span class="p">}</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>项目的代码文件，声明了一个<code>main</code>函数，然后打印<code>Hello, world!</code>, 是不是非常的相似，只不过Go中是<code>func</code>， 而<code>Rust</code>中变成了<code>fn</code>，果然更加简洁，可能眼尖的同学已经发现了另外一处不同，<code>println!</code>怎么过了一个<code>!</code>呢，是不是写错了呢，</p>
+<p>Cargo.toml</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-toml" data-lang="toml"><span class="p">[</span><span class="nx">package</span><span class="p">]</span>
+<span class="nx">name</span> <span class="p">=</span> <span class="s2">&#34;my_first_rust_app&#34;</span>
+<span class="nx">version</span> <span class="p">=</span> <span class="s2">&#34;0.1.0&#34;</span>
+<span class="nx">authors</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;lixiaohui &lt;lixiaohui0812@gmail.com&gt;&#34;</span><span class="p">]</span>
+<span class="nx">edition</span> <span class="p">=</span> <span class="s2">&#34;2018&#34;</span>
+
+<span class="c"># See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html</span>
+
+<span class="p">[</span><span class="nx">dependencies</span><span class="p">]</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>项目描述的文件，说明了项目名称<code>my_first_rust_app</code>, 版本<code>0.1.0</code>, 作者信息<code>[&quot;lixiaohui &lt;lixiaohui0812@gmail.com&gt;&quot;]</code>, rust的大版本<code>2018</code>, 下面还有一个模块<code>dependencies</code>声明了我们项目中使用到了依赖。接下来我们一一介绍各个部分的作用:</p>
+<a class="post-dummy-target" id="package"></a><h4>[package]</h4>
+<a class="post-dummy-target" id="dev-build-targetdependencies"></a><h4>[(dev-/build-/target.*.)dependencies]</h4>
+<a class="post-dummy-target" id="profile"></a><h4>[profile.*]</h4>
+<a class="post-dummy-target" id="feature"></a><h4>[feature]</h4>
+<a class="post-dummy-target" id="workspace"></a><h4>[workspace]</h4>
+<a class="post-dummy-target" id="heading-2"></a><h2>特色</h2>
+<a class="post-dummy-target" id="runtime"></a><h3>无Runtime</h3>
+<a class="post-dummy-target" id="heading-3"></a><h3>零开销抽象</h3>
+<a class="post-dummy-target" id="heading-4"></a><h3>无空指针</h3>
+<a class="post-dummy-target" id="gc"></a><h3>无需手动释放内存/无GC</h3>
+<a class="post-dummy-target" id="heading-5"></a><h2>领域</h2>
+<a class="post-dummy-target" id="heading-6"></a><h3>数据库</h3>
+<a class="post-dummy-target" id="heading-7"></a><h3>图像</h3>
+<a class="post-dummy-target" id="heading-8"></a><h3>网关</h3>
+<a class="post-dummy-target" id="heading-9"></a><h3>游戏</h3>
+<a class="post-dummy-target" id="heading-10"></a><h3>音视频处理</h3>
+<a class="post-dummy-target" id="heading-11"></a><h2>和其他语言对比</h2>
+<a class="post-dummy-target" id="c"></a><h3>C++</h3>
+<a class="post-dummy-target" id="go"></a><h3>Go</h3>
+<a class="post-dummy-target" id="java"></a><h3>Java</h3>
+
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>本文于 2019-12-16 更新</span>
+            </div>
+            <div class="post-info-license">
+                
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+                
+            </div>
+            <div class="post-info-share">
+                
+                    <span>
+    
+        <a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2frust-startup%2f&amp;text=Rust%e5%88%9d%e6%8e%a2&amp;via=" target="_blank" title="Share on Twitter">
+            <i class="fab fa-twitter fa-fw"></i>
+        </a>
+    
+    
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2frust-startup%2f" target="_blank" title="Share on Facebook">
+            <i class="fab fa-facebook-square fa-fw"></i>
+        </a>
+    
+    
+        <a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2frust-startup%2f&amp;title=Rust%e5%88%9d%e6%8e%a2" target="_blank" title="Share on Reddit">
+            <i class="fab fa-reddit fa-fw"></i>
+        </a>
+    
+    
+    
+    
+    
+    
+    
+    
+</span>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+            
+                
+                    <span class="tag">
+                        <a href="https://leaxoy.github.io/tags/rust/"><i class="fas fa-tag fa-fw"></i>Rust</a>
+                    </span>
+                
+            
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://leaxoy.github.io/">主页</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+            <a href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" class="prev" rel="prev" title="Go实现Mqtt broker"><i class="fas fa-angle-left fa-fw"></i>Go实现Mqtt broker</a>
+        
+        
+    </div>
+</div>
+
+        <div class="post-comment">
+            
+            
+
+            
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/">李大辉</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+
+    
+    
+
+
+
+    
+    
+
+
+
+
+
+    
+    
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+    
+    
+
+    
+
+    
+        <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
+    
+
+    
+
+    
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-66543901-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>

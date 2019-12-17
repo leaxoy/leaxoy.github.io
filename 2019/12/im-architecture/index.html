@@ -41,7 +41,7 @@
     
         "keywords": "IM",
     
-    "wordcount":  3693 ,
+    "wordcount":  3922 ,
     "url": "https:\/\/leaxoy.github.io\/2019\/12\/im-architecture\/",
     
         "datePublished": "2019-12-12T16:27:11\x2b08:00",
@@ -145,7 +145,7 @@
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-12>2019-12-12</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 3693 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 3922 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 8 分钟&nbsp;</div>
         </div>
 
@@ -323,7 +323,10 @@
 <a class="post-dummy-target" id="heading-7"></a><h4>客户端消息处理</h4>
 <p>对于系统消息，获取后做一个计数。对于业务消息，获取后，并通过Bridge模块路由到对应的业务中。</p>
 <blockquote>
-<p>服务端认为的超时时间为2倍Keepalive时间，通常不大于运营商的缓存时间。</p>
+<p>为什么需要客户端主动发起<code>Ping</code>， 主要是因为客户端发ping消息的间隔可以方便的进行动态调整，发ping的作用主要是保证在一段时间内是活跃的，除了ping消息，其他的消息也可以提供ping的作用，如果这个机制服务端实现需要做大量的工作，同时对服务端性能压力比较大，需要有大量的计时器来完成，因此需要客户端发Ping请求。</p>
+</blockquote>
+<blockquote>
+<p>服务端认为的超时时间为2倍Keepalive时间，连续两次Ping的时间间隔通常不大于运营商的缓存时间。</p>
 </blockquote>
 <a class="post-dummy-target" id="router"></a><h3>路由层(Router)</h3>
 <p>存储用户连接信息，主要存储以下三类信息</p>
@@ -344,14 +347,14 @@
 <li>基于Raft等一致性算法的本地存储。
 <ul>
 <li>优点是本地存储，且强一致，省去了网络的开销。</li>
-<li>缺点是需要实现一致性算法，比较麻烦，不过好在已经有了成熟的Raft实现，比如ETCD的实现，能省下不少事。</li>
+<li>缺点是需要实现一致性算法，比较麻烦，不过好在已经有了成熟的<code>Raft</code>实现，比如<code>ETCD</code>的实现，能省下不少事。</li>
 </ul>
 </li>
 </ul>
 <a class="post-dummy-target" id="service"></a><h3>服务层(Service)</h3>
 <p>  接收上游服务的请求，根据上有的请求向路由层请求状态信息，得到消息应当发送到哪些接入层实例上，然后向对应的接入层实例投递消息，起到了承上启下的作用。</p>
-<p>  服务层需要感知路由层与接入层的存在，可以通过Etcd注册中心来实现服务的注册与发现。</p>
-<p>  服务层既可以作为一个单独的服务而存在，也可以作为Lib存在(嵌入到用户的程序中)，可以减少一次网络开销。</p>
+<p>  服务层需要感知路由层与接入层的存在，可以通过<code>Etcd</code>注册中心来实现服务的注册与发现。</p>
+<p>  服务层既可以作为一个单独的服务而存在，也可以作为<code>Lib</code>存在(嵌入到用户的程序中)，可以减少一次网络开销。</p>
 <a class="post-dummy-target" id="heading-8"></a><h2>扩容</h2>
 <p>扩容是服务端服务通向高并发的一个必由之路。</p>
 <a class="post-dummy-target" id="heading-9"></a><h3>接入层扩容</h3>
@@ -366,23 +369,24 @@
 <p>服务层同接入层一样是无状态的，因此可以和接入层一样扩容。</p>
 <a class="post-dummy-target" id="heading-14"></a><h2>重启</h2>
 <a class="post-dummy-target" id="heading-15"></a><h3>接入层</h3>
-<p>所有的组件中重启最麻烦的是接入层，接入层的重启意味着大量连接的失效以及大量的并发的connect消息，因此必然不能直接重启整个集群，只能one by one的重启。过程如下</p>
+<p>所有的组件中重启最麻烦的是接入层，接入层的重启意味着大量连接的失效以及大量的并发的<code>connect</code>消息，因此必然不能直接重启整个集群，只能<code>one by one</code>的重启。过程如下</p>
 <ol>
-<li>从nginx中摘除对应的实例，新的连接不会接入进来</li>
+<li>从<code>nginx</code>中摘除对应的实例，新的连接不会接入进来</li>
 <li>发送重启信号给接入层实例</li>
 <li>接收到信号后，广播一条重连的消息给客户端，客户端断掉连接重连，因为第一步的操作，再次连接无法接入</li>
 <li>等待一段时间或者剩余连接数小于阈值后，即可重启</li>
-<li>在nginx加入实例，新的连接可以重新接入</li>
+<li>在<code>nginx</code>加入实例，新的连接可以重新接入</li>
 </ol>
 <a class="post-dummy-target" id="heading-16"></a><h3>路由层</h3>
 <p>基于状态存储的方式，具体的重启策略也不尽相同，如果是用的第三方的存储方案，则可以简单的进行重启。如果用的是本地存储的话，Raft算法可以保证在集群可用节点数超过一半时是可用的，因此可以采用一台一台的方式进行重启。</p>
 <a class="post-dummy-target" id="heading-17"></a><h3>服务层</h3>
+<p>无任何状态，仅做消息的分发，可以直接重启，只需在重启前，向注册中心取消注册，重启后，重新向注册中心进行注册即可。</p>
 <a class="post-dummy-target" id="heading-18"></a><h2>离线消息</h2>
 <p>当用户不在线时，投递给用户的消息主要有两种处理方式</p>
 <a class="post-dummy-target" id="heading-19"></a><h3>客户端推拉结合+业务处理</h3>
 <p>  离线消息拉，在线消息推，此时不需要处理离线消息，对应的业务去处理。对于一个群的消息，业务层需要对所有消息进行存储，当客户端再次登录时，先从业务方拉取历史消息，待消息拉取完毕后，开始处理长链接的消息。</p>
 <a class="post-dummy-target" id="heading-20"></a><h3>接入层持久化离线消息</h3>
-<p>  待到重新接入后，将离线期间的消息依次推送给客户端。对于每一个连接，都需要存在一个对应的队列来保存未接收消息，通常情况下是每个连接对应的一个结构体中有一个queue的变量。But，长链接总归是要有重启操作的，因此所有的消息都需要进行落盘操作，才能保证在接入层重启后消息不丢失，对应的结构为<code>user_id, msg</code>二元组，结构比较简单，同时数据量也会比较大，因此我们可以采用分布式KV的存储结构，<code>TiKV</code>就是一个不错的选择，基于<code>Rust</code>和<code>RocksDB</code>构建，原生的分布式支持，适用于存储大量的数据。</p>
+<p>  待到重新接入后，将离线期间的消息依次推送给客户端。对于每一个连接，都需要存在一个对应的队列来保存未接收消息，通常情况下是每个连接对应的一个结构体中有一个queue的变量。But，长链接总归是要有重启操作的，因此所有的消息都需要进行落盘操作，才能保证在接入层重启后消息不丢失，对应的结构为<code>user_id, msg</code>二元组，结构比较简单，同时数据量也会比较大，因此我们可以采用分布式<code>KV</code>的存储结构，<code>TiKV</code>就是一个不错的选择，基于<code>Rust</code>和<code>RocksDB</code>构建，原生的分布式支持，适用于存储大量的数据。</p>
 <blockquote>
 <p>  接入层持久化消息将复杂度转移到了接入层，大幅度的简化了业务的开发与接入成本。推拉结合的方式将问题保留给客户端和业务方，但是接入层可以更加轻量。具体使用哪种方式还要根据具体场景进行深度的分析。</p>
 </blockquote>

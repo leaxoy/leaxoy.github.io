@@ -3,7 +3,91 @@
         <url>
             <loc>https://leaxoy.github.io/categories/</loc>
             
-                <lastmod>2019-12-16T15:26:29+08:00</lastmod>
+                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/posts/</loc>
+            
+                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/categories/rust/</loc>
+            
+                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/tags/rust/</loc>
+            
+                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/2019/12/rust-startup/</loc>
+            
+                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/tags/</loc>
+            
+                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/</loc>
+            
+                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -57,49 +141,7 @@
         </url>
     
         <url>
-            <loc>https://leaxoy.github.io/posts/</loc>
-            
-                <lastmod>2019-12-16T15:26:29+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
             <loc>https://leaxoy.github.io/categories/system/</loc>
-            
-                <lastmod>2019-12-16T15:26:29+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/tags/</loc>
-            
-                <lastmod>2019-12-16T15:26:29+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/</loc>
             
                 <lastmod>2019-12-16T15:26:29+08:00</lastmod>
             
@@ -155,7 +197,7 @@
         </url>
     
         <url>
-            <loc>https://leaxoy.github.io/categories/flutter/</loc>
+            <loc>https://leaxoy.github.io/tags/flutter/</loc>
             
                 <lastmod>2019-12-14T18:17:35+08:00</lastmod>
             
@@ -169,7 +211,7 @@
         </url>
     
         <url>
-            <loc>https://leaxoy.github.io/tags/flutter/</loc>
+            <loc>https://leaxoy.github.io/categories/flutter/</loc>
             
                 <lastmod>2019-12-14T18:17:35+08:00</lastmod>
             

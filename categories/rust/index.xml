@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rust on 无双</title>
+    <link>https://leaxoy.github.io/categories/rust/</link>
+    <description>Recent content in Rust on 无双</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Mon, 16 Dec 2019 20:19:16 +0800</lastBuildDate>
+    
+	<atom:link href="https://leaxoy.github.io/categories/rust/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Rust初探</title>
+      <link>https://leaxoy.github.io/2019/12/rust-startup/</link>
+      <pubDate>Mon, 16 Dec 2019 20:19:16 +0800</pubDate>
+      
+      <guid>https://leaxoy.github.io/2019/12/rust-startup/</guid>
+      <description>看到这个标题，可能要有人问了，现在的编程语言已经那么多了，为什么还要在学一门，再学一门可以让我涨工资吗，这个语言比现有的语言好在哪里呢？这个</description>
+    </item>
+    
+  </channel>
+</rss>
