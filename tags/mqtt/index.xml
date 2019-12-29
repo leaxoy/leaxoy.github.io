@@ -27,7 +27,7 @@
       <pubDate>Mon, 16 Dec 2019 15:26:17 +0800</pubDate>
       
       <guid>https://leaxoy.github.io/2019/12/mqtt-protocol/</guid>
-      <description></description>
+      <description>这篇属于IM三剑客中的第二篇，前面一篇主要讲解了通用IM的一些架构的知识，这边主要讲解MQTT协议的细节，最后一篇将会着重介绍了MQTT Br</description>
     </item>
     
   </channel>

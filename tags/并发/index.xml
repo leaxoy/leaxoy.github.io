@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 15 Dec 2019 17:04:36 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 26 Dec 2019 12:30:08 +0800</lastBuildDate>
     
 	<atom:link href="https://leaxoy.github.io/tags/%E5%B9%B6%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go语言并发安全与不安全</title>
+      <link>https://leaxoy.github.io/2019/12/go-concurrent-saft-and-unsafe/</link>
+      <pubDate>Thu, 26 Dec 2019 12:30:08 +0800</pubDate>
+      
+      <guid>https://leaxoy.github.io/2019/12/go-concurrent-saft-and-unsafe/</guid>
+      <description>在开发过程中，我们难免要跨线程/协程进行数据的访问与修改，由此便会产生数据安全性问题，那么对于号称高并发，高性能的go语言来说，又会是怎么样</description>
+    </item>
     
     <item>
       <title>并发模型解析</title>

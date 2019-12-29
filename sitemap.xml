@@ -3,7 +3,35 @@
         <url>
             <loc>https://leaxoy.github.io/categories/</loc>
             
-                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
+                <lastmod>2019-12-26T12:30:08+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/tags/go/</loc>
+            
+                <lastmod>2019-12-26T12:30:08+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/2019/12/go-concurrent-saft-and-unsafe/</loc>
+            
+                <lastmod>2019-12-26T12:30:08+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -17,7 +45,63 @@
         <url>
             <loc>https://leaxoy.github.io/posts/</loc>
             
-                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
+                <lastmod>2019-12-26T12:30:08+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/categories/system/</loc>
+            
+                <lastmod>2019-12-26T12:30:08+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/tags/</loc>
+            
+                <lastmod>2019-12-26T12:30:08+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/tags/%E5%B9%B6%E5%8F%91/</loc>
+            
+                <lastmod>2019-12-26T12:30:08+08:00</lastmod>
+            
+            
+                <changefreq>weekly</changefreq>
+            
+            
+                <priority>0.5</priority>
+            
+            
+        </url>
+    
+        <url>
+            <loc>https://leaxoy.github.io/</loc>
+            
+                <lastmod>2019-12-26T12:30:08+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -71,48 +155,6 @@
         </url>
     
         <url>
-            <loc>https://leaxoy.github.io/tags/</loc>
-            
-                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/</loc>
-            
-                <lastmod>2019-12-16T20:19:16+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/tags/go/</loc>
-            
-                <lastmod>2019-12-16T15:26:29+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
             <loc>https://leaxoy.github.io/2019/12/mqtt-implement-in-go/</loc>
             
                 <lastmod>2019-12-16T15:26:29+08:00</lastmod>
@@ -141,37 +183,9 @@
         </url>
     
         <url>
-            <loc>https://leaxoy.github.io/categories/system/</loc>
-            
-                <lastmod>2019-12-16T15:26:29+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
             <loc>https://leaxoy.github.io/2019/12/mqtt-protocol/</loc>
             
                 <lastmod>2019-12-16T15:26:17+08:00</lastmod>
-            
-            
-                <changefreq>weekly</changefreq>
-            
-            
-                <priority>0.5</priority>
-            
-            
-        </url>
-    
-        <url>
-            <loc>https://leaxoy.github.io/tags/%E5%B9%B6%E5%8F%91/</loc>
-            
-                <lastmod>2019-12-15T17:04:36+08:00</lastmod>
             
             
                 <changefreq>weekly</changefreq>
@@ -197,7 +211,7 @@
         </url>
     
         <url>
-            <loc>https://leaxoy.github.io/tags/flutter/</loc>
+            <loc>https://leaxoy.github.io/categories/flutter/</loc>
             
                 <lastmod>2019-12-14T18:17:35+08:00</lastmod>
             
@@ -211,7 +225,7 @@
         </url>
     
         <url>
-            <loc>https://leaxoy.github.io/categories/flutter/</loc>
+            <loc>https://leaxoy.github.io/tags/flutter/</loc>
             
                 <lastmod>2019-12-14T18:17:35+08:00</lastmod>
             

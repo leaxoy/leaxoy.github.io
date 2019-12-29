@@ -19,7 +19,7 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Mqtt协议解析"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:description" content="这篇属于IM三剑客中的第二篇，前面一篇主要讲解了通用IM的一些架构的知识，这边主要讲解MQTT协议的细节，最后一篇将会着重介绍了MQTT Br"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
@@ -41,7 +41,7 @@
     
         "keywords": "MQTT",
     
-    "wordcount":  0 ,
+    "wordcount":  2062 ,
     "url": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-protocol\/",
     
         "datePublished": "2019-12-16T15:26:17\x2b08:00",
@@ -145,8 +145,8 @@
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-16>2019-12-16</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 0 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>预计阅读 0 分钟&nbsp;</div>
+                <i class="fas fa-pencil-alt fa-fw"></i>约 2062 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 5 分钟&nbsp;</div>
         </div>
 
         
@@ -154,7 +154,77 @@
         <div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">目录</h2>
                 <div class="post-toc-content always-active">
-                    <nav id="TableOfContents"></nav>
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">相关术语</a>
+      <ul>
+        <li><a href="#client">Client(客户端)</a></li>
+        <li><a href="#session">Session</a></li>
+        <li><a href="#broker">Broker</a></li>
+        <li><a href="#subscription">Subscription</a></li>
+        <li><a href="#topic">Topic</a></li>
+        <li><a href="#topic-filter">Topic Filter</a></li>
+        <li><a href="#publisher">Publisher</a></li>
+        <li><a href="#subscriber">Subscriber</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-1">数据解包</a>
+      <ul>
+        <li><a href="#heading-2">第一个字节</a></li>
+        <li><a href="#heading-3">剩下的字节</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-4">连接与认证</a>
+      <ul>
+        <li><a href="#connect1">Connect(1)</a></li>
+        <li><a href="#connack2">Connack(2)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-5">心跳与保活</a>
+      <ul>
+        <li><a href="#pingreq12">Pingreq(12)</a></li>
+        <li><a href="#pingresp13">Pingresp(13)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-6">订阅</a>
+      <ul>
+        <li><a href="#subscribe8">Subscribe(8)</a></li>
+        <li><a href="#suback9">Suback(9)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-7">取消订阅</a>
+      <ul>
+        <li><a href="#unsubscribe10">Unsubscribe(10)</a></li>
+        <li><a href="#unsuback11">Unsuback(11)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-8">发布消息</a>
+      <ul>
+        <li><a href="#publish3">Publish(3)</a></li>
+        <li><a href="#pubrel6">Pubrel(6)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-9">接收消息</a>
+      <ul>
+        <li><a href="#puback4">Puback(4)</a></li>
+        <li><a href="#pubrec5">Pubrec(5)</a></li>
+        <li><a href="#pubcomp7">Pubcomp(7)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-10">断开连接</a>
+      <ul>
+        <li><a href="#disconnect14">Disconnect(14)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-11">服务质量保证</a>
+      <ul>
+        <li><a href="#qos-0">Qos 0</a></li>
+        <li><a href="#qos-1">Qos 1</a></li>
+        <li><a href="#qos-2">Qos 2</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
                 </div>
             </div>
             <div class="post-toc-mobile" id="post-toc-mobile">
@@ -163,7 +233,77 @@
                     <div class="post-toc-content">
                         
                         
-                        <nav id="TableOfContentsMobile"></nav>
+                        <nav id="TableOfContentsMobile">
+  <ul>
+    <li><a href="#heading">相关术语</a>
+      <ul>
+        <li><a href="#client">Client(客户端)</a></li>
+        <li><a href="#session">Session</a></li>
+        <li><a href="#broker">Broker</a></li>
+        <li><a href="#subscription">Subscription</a></li>
+        <li><a href="#topic">Topic</a></li>
+        <li><a href="#topic-filter">Topic Filter</a></li>
+        <li><a href="#publisher">Publisher</a></li>
+        <li><a href="#subscriber">Subscriber</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-1">数据解包</a>
+      <ul>
+        <li><a href="#heading-2">第一个字节</a></li>
+        <li><a href="#heading-3">剩下的字节</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-4">连接与认证</a>
+      <ul>
+        <li><a href="#connect1">Connect(1)</a></li>
+        <li><a href="#connack2">Connack(2)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-5">心跳与保活</a>
+      <ul>
+        <li><a href="#pingreq12">Pingreq(12)</a></li>
+        <li><a href="#pingresp13">Pingresp(13)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-6">订阅</a>
+      <ul>
+        <li><a href="#subscribe8">Subscribe(8)</a></li>
+        <li><a href="#suback9">Suback(9)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-7">取消订阅</a>
+      <ul>
+        <li><a href="#unsubscribe10">Unsubscribe(10)</a></li>
+        <li><a href="#unsuback11">Unsuback(11)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-8">发布消息</a>
+      <ul>
+        <li><a href="#publish3">Publish(3)</a></li>
+        <li><a href="#pubrel6">Pubrel(6)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-9">接收消息</a>
+      <ul>
+        <li><a href="#puback4">Puback(4)</a></li>
+        <li><a href="#pubrec5">Pubrec(5)</a></li>
+        <li><a href="#pubcomp7">Pubcomp(7)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-10">断开连接</a>
+      <ul>
+        <li><a href="#disconnect14">Disconnect(14)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-11">服务质量保证</a>
+      <ul>
+        <li><a href="#qos-0">Qos 0</a></li>
+        <li><a href="#qos-1">Qos 1</a></li>
+        <li><a href="#qos-2">Qos 2</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
                     </div>
                 </details>
             </div>
@@ -194,7 +334,312 @@
             
             
             
-            
+            <blockquote>
+<p>这篇属于IM三剑客中的第二篇，前面一篇主要讲解了通用IM的一些架构的知识，这边主要讲解<code>MQTT</code>协议的细节，最后一篇将会着重介绍了MQTT Broker的Go语言实现。</p>
+<ul>
+<li><a href="https://leaxoy.github.io/2019/12/im-architecture/">通用IM架构</a></li>
+<li><a href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/">Go实现Mqtt broker</a></li>
+</ul>
+</blockquote>
+<p>  MQTT协议以其效率高，语义完善而著名，非常适合使用在移动设备中，可以大幅度的减少耗电量。相对于TCP，语义更加丰富，额外的overload小，最少只需要2byte；相对于其他的应用层协议Websocket等，头部简单，包体积更小。</p>
+<a class="post-dummy-target" id="heading"></a><h2>相关术语</h2>
+<a class="post-dummy-target" id="client"></a><h3>Client(客户端)</h3>
+<a class="post-dummy-target" id="session"></a><h3>Session</h3>
+<a class="post-dummy-target" id="broker"></a><h3>Broker</h3>
+<a class="post-dummy-target" id="subscription"></a><h3>Subscription</h3>
+<a class="post-dummy-target" id="topic"></a><h3>Topic</h3>
+<a class="post-dummy-target" id="topic-filter"></a><h3>Topic Filter</h3>
+<a class="post-dummy-target" id="publisher"></a><h3>Publisher</h3>
+<a class="post-dummy-target" id="subscriber"></a><h3>Subscriber</h3>
+<a class="post-dummy-target" id="heading-1"></a><h2>数据解包</h2>
+<p>  <code>MQTT</code>数据包共分为三部分，<code>FixedHeader</code>, <code>Variable Header</code> 和 <code>Payload</code>, 其中只有<code>FixedHeader</code>是必须的，<code>Variable Header</code>和<code>Payload</code>部分是可选的。这部分着重介绍<code>FixedHeader</code>，可选部分将在下面的详细介绍中涉及。</p>
+<p>  固定头部的长度为<code>2...5 byte</code>，说到这里，可能有人迷糊了，既然说的是固定头部，怎么长度还有不同的选项呢。其实固定头部的意思并不是说长度固定，而是说每个数据包必须包含的意思，哪怕一个数据包什么内容都没有，也要有一个长度为2的头部数据。那么长度不固定的固定头部又该如何解释呢，因为不同的场景数据包的大小也不近相同，为了能让服务端知晓如何解析，解析到何处，就必须要把数据包的大小给编码到数据包中，数据包有大有小，如果用一个比较小的数字的话，就无法发送大于该数字的数据了，如果数据包比较小，但是编码用的数字又比较大的话，就会造成浪费的现象，所以针对不同大小的数据，需要用不同的方式对长度进行编码，这就是可变长度的由来。</p>
+<blockquote>
+<p>在<code>mqtt</code>中，数据包的大小由第2个byte到第5个byte来决定，最小为1个字节，最大为4个字节，加上头部固定的一个字节，正好是<code>2...5 byte</code>.</p>
+</blockquote>
+<p>下面为<code>FixedHeader</code>的结构：</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">Bit 7</th>
+<th align="center">Bit 6</th>
+<th align="center">Bit 5</th>
+<th align="center">Bit 4</th>
+<th align="center">Bit 3</th>
+<th align="center">Bit 2</th>
+<th align="center">Bit 1</th>
+<th align="center">Bit 0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Byte 1</td>
+<td align="center">MsgType</td>
+<td align="center">MsgType</td>
+<td align="center">MsgType</td>
+<td align="center">MsgType</td>
+<td align="center">Dup</td>
+<td align="center">Qos</td>
+<td align="center">Qos</td>
+<td align="center">Retained</td>
+</tr>
+<tr>
+<td align="center">Byte 2</td>
+<td align="center">Has 3?</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Byte 3</td>
+<td align="center">Has 4?</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Byte 4</td>
+<td align="center">Has 5?</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">Byte 5</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+<a class="post-dummy-target" id="heading-2"></a><h3>第一个字节</h3>
+<p>  第一个字节主要用做消息类型的控制，以及对应消息类型的额外的属性。按照bit分割，共有8bit，前四个bit用来表示数据包的类型，是connect还是publish，除了0和15外（用作保留类型），其他的14中均有不同的定义，下方分别给出了14中类型的详细的解释。</p>
+<a class="post-dummy-target" id="4bit"></a><h4>剩下的4bit</h4>
+<ul>
+<li>第一个bit，是<code>Duplicated</code>的意思，用在<code>publish</code>中<code>qos</code>为<code>1/2</code>的情况，用来表明该消息是否为一条重复的消息。</li>
+<li>第2/3个bit，声明了<code>qos</code>的级别，可选的有<code>(0b00, 0b01, 0b10)</code>，分别代表了<code>(QOS0, QOS1, QOS2)</code>，不能有3，如果是3的话，会被认为成一个非法的数据包。</li>
+<li>第四个bit，<code>Retained</code>，告知broker是否要将消息持久化，以供后来的订阅者消费。</li>
+</ul>
+<a class="post-dummy-target" id="heading-3"></a><h3>剩下的字节</h3>
+<p>  这个部分用来表示剩下的数据的长度，前面说了，这个部分长度是可变的，范围为<code>1-4</code>，那么如果来确定长度是1还是其他的呢，秘密就藏在字节的最高位(7bit)，这部分的所有数据，最高位bit都表明有没有后续的长度，如果这个值为0的话，表明没有后续的数据了，如果是一的话，表明还需要继续计算长度，因此能表明的数字最小为0，最大为<code>128 * 128 * 128 * 128 = 268435456 byte = 256 Mb</code>。</p>
+<a class="post-dummy-target" id="heading-4"></a><h2>连接与认证</h2>
+<a class="post-dummy-target" id="connect1"></a><h3>Connect(<code>1</code>)</h3>
+<p>  当客户端建立好与服务器的连接后，客户端发送的第一个报文必须是<code>Connect</code>，并且只能发送一次，服务端在收到第二个Connect的时候，会认为客户端异常而断开连接。·</p>
+<a class="post-dummy-target" id="connack2"></a><h3>Connack(<code>2</code>)</h3>
+<p>服务端响应，</p>
+<a class="post-dummy-target" id="heading-5"></a><h2>心跳与保活</h2>
+<a class="post-dummy-target" id="pingreq12"></a><h3>Pingreq(<code>12</code>)</h3>
+<p>客户端发送，无<code>Variable Header</code>与<code>Payload</code>，</p>
+<a class="post-dummy-target" id="pingresp13"></a><h3>Pingresp(<code>13</code>)</h3>
+<p>服务端响应，无<code>Variable Header</code>与<code>Payload</code>，</p>
+<a class="post-dummy-target" id="heading-6"></a><h2>订阅</h2>
+<a class="post-dummy-target" id="subscribe8"></a><h3>Subscribe(<code>8</code>)</h3>
+<a class="post-dummy-target" id="suback9"></a><h3>Suback(<code>9</code>)</h3>
+<a class="post-dummy-target" id="heading-7"></a><h2>取消订阅</h2>
+<a class="post-dummy-target" id="unsubscribe10"></a><h3>Unsubscribe(<code>10</code>)</h3>
+<a class="post-dummy-target" id="unsuback11"></a><h3>Unsuback(<code>11</code>)</h3>
+<a class="post-dummy-target" id="heading-8"></a><h2>发布消息</h2>
+<a class="post-dummy-target" id="publish3"></a><h3>Publish(<code>3</code>)</h3>
+<a class="post-dummy-target" id="pubrel6"></a><h3>Pubrel(<code>6</code>)</h3>
+<p>用在<code>QOS2</code>消息的第二阶段，</p>
+<a class="post-dummy-target" id="heading-9"></a><h2>接收消息</h2>
+<a class="post-dummy-target" id="puback4"></a><h3>Puback(<code>4</code>)</h3>
+<p>  用在<code>QOS1</code>的消息上，当收到<code>QOS1</code>的消息后，马上回复<code>Puback</code>的消息，同时设置<code>MessageId</code>为<code>Publish</code>消息的<code>MessageId</code>，</p>
+<a class="post-dummy-target" id="pubrec5"></a><h3>Pubrec(<code>5</code>)</h3>
+<p>  用在<code>QOS2</code>消息的第一阶段</p>
+<a class="post-dummy-target" id="pubcomp7"></a><h3>Pubcomp(<code>7</code>)</h3>
+<p>  用在<code>QOS2</code>消息的第二阶段</p>
+<a class="post-dummy-target" id="heading-10"></a><h2>断开连接</h2>
+<a class="post-dummy-target" id="disconnect14"></a><h3>Disconnect(<code>14</code>)</h3>
+<p>  当客户端主动断开连接时，主动发送<code>Disconnect</code>消息，该消息无<code>Varibale Header</code>与<code>Payload</code>。</p>
+<hr>
+<a class="post-dummy-target" id="heading-11"></a><h2>服务质量保证</h2>
+<p>  MQTT发布消息QoS保证不是端到端的，是客户端与服务器之间的。订阅者收到MQTT消息的QoS级别，最终取决于发布消息的QoS和主题订阅的QoS。</p>
+<table>
+<thead>
+<tr>
+<th align="center">发布者发布的Qos</th>
+<th align="center">订阅者订阅的Qos</th>
+<th align="center">最终的QOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">0</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">2</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>  总而言之，言而总之，最终的QOS级别为两者中保证较弱的一方的QOS。</p>
+</blockquote>
+<a class="post-dummy-target" id="qos-0"></a><h3>Qos 0</h3>
+<p>  Qos 0只会投递一次，没有任何到达的保证，数据从<code>Publisher</code>到<code>Broker</code>，再从<code>Broker</code>到<code>Subscriber</code>均为一次发送，<strong>适合一些不那么重要的数据。</strong>
+
+<div class="mermaid">
+sequenceDiagram
+    participant Publisher
+    participant Broker
+    participant Subscriber
+    Publisher->>Broker: Publish
+    Publisher->>Publisher: Delete(Msg)
+    Broker->>Subscriber: Publish
+    Broker->>Broker: Delete(Msg)
+</div>
+</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sequenceDiagram
+    participant Publisher
+    participant Broker
+    participant Subscriber
+    Publisher-&gt;&gt;Broker: Publish
+    Publisher-&gt;&gt;Publisher: Delete(Msg)
+    Broker-&gt;&gt;Subscriber: Publish
+    Broker-&gt;&gt;Broker: Delete(Msg)
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="qos-1"></a><h3>Qos 1</h3>
+
+<div class="mermaid">
+sequenceDiagram
+    participant Publisher
+    participant Broker
+    participant Subscriber
+    Publisher->>Publisher: Store(Msg)
+    Publisher->>Broker: Publish (msg_id = x)
+    Broker->>Broker: Store(Msg)
+    Broker->>Subscriber: Publish (msg_id = y)
+    Broker->>Publisher: Puback (msg_id = x)
+    Publisher->>Publisher: Delete(Msg)
+    Subscriber->>Broker: Puback (msg_id = y)
+    Broker->>Broker: Delete(Msg)
+</div>
+
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sequenceDiagram
+    participant Publisher
+    participant Broker
+    participant Subscriber
+    Publisher-&gt;&gt;Publisher: Store(Msg)
+    Publisher-&gt;&gt;Broker: Publish (msg_id = x)
+    Broker-&gt;&gt;Broker: Store(Msg)
+    Broker-&gt;&gt;Subscriber: Publish (msg_id = y)
+    Broker-&gt;&gt;Publisher: Puback (msg_id = x)
+    Publisher-&gt;&gt;Publisher: Delete(Msg)
+    Subscriber-&gt;&gt;Broker: Puback (msg_id = y)
+    Broker-&gt;&gt;Broker: Delete(Msg)
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="qos-2"></a><h3>Qos 2</h3>
+
+<div class="mermaid">
+sequenceDiagram
+    participant Publisher
+    participant Broker
+    participant Subscriber
+    Publisher->>Publisher: Store(Msg)
+    Publisher->>Broker: Publish
+    Broker->>Broker: Store(Msg)
+    Broker->>Publisher: Pubrec
+    Publisher->>Broker: Pubrel
+    Broker->>Subscriber: Publish
+    Broker->>Publisher: Pubcomp
+    Publisher->>Publisher: Delete(Msg)
+    Subscriber->>Subscriber: Store(Msg)
+    Subscriber->>Broker: Pubrec
+    Broker->>Subscriber: Pubrel
+    Subscriber->>Subscriber: Notify(Msg)
+    Subscriber->>Broker: Pubcomp
+    Broker->>Broker: Delete(Msg)
+    Subscriber->>Subscriber: Delete(Msg)
+</div>
+
+
         </div>
 
         <div class="post-footer" id="post-footer">
@@ -378,6 +823,8 @@
     
 
     
+        <script src="/js/lib/mermaid/mermaid.min.min.js"></script><script>mermaid.initialize({startOnLoad: true, theme: null,});</script>
+    
 
     
         <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
@@ -406,6 +853,7 @@ if (!doNotTrack) {
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
+
 
 </div>
         <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
