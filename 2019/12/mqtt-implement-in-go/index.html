@@ -5,10 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Go实现Mqtt broker | 无双</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
-<meta name="Description" content="LoveIt 主题演示">
-<link rel="prev" href="https://leaxoy.github.io/2019/12/mqtt-protocol/" />
-<link rel="next" href="https://leaxoy.github.io/2019/12/rust-startup/" />
-<link rel="canonical" href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" />
+<meta name="Description" content="一枚热爱工作的小白"><link rel="prev" href="https://leaxoy.github.io/2019/12/mqtt-protocol/" /><link rel="next" href="https://leaxoy.github.io/2019/12/rust-startup/" /><link rel="canonical" href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -16,92 +13,54 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="Go实现Mqtt broker" />
+<meta property="og:description" content="MQTT broker的主要作用有两个，处理Publisher发布的消息，将消息投递给对应的Subscriber。 服务器的设计因此也分为几个模块： S" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" />
+<meta property="article:published_time" content="2019-12-16T15:26:29+08:00" />
+<meta property="article:modified_time" content="2019-12-16T15:26:29+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Go实现Mqtt broker"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:description" content="MQTT broker的主要作用有两个，处理Publisher发布的消息，将消息投递给对应的Subscriber。 服务器的设计因此也分为几个模块： S"/>
 <script type="application/ld+json">
     {
-    "@context": "http://schema.org",
-    "@type": "BlogPosting",
-    "headline": "Go实现Mqtt broker",
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-implement-in-go\/"
-    },
-    
-        "image": {
-            "@type": "ImageObject",
-            "url": "https:\/\/leaxoy.github.io\/cover.png",
-            "width":  800 ,
-            "height":  600 
-        },
-    
-    "genre": "posts",
-    
-        "keywords": "MQTT, Go",
-    
-    "wordcount":  0 ,
-    "url": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-implement-in-go\/",
-    
-        "datePublished": "2019-12-16T15:26:29\x2b08:00",
-    
-    
-        "dateModified": "2019-12-16T15:26:29\x2b08:00",
-    
-    
-        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
-    
-    
-        "publisher": {
-            "@type": "Organization",
-            "name": "李大辉",
-            "logo": {
-            "@type": "ImageObject",
-            "url": "https:\/\/leaxoy.github.io\/logo.png",
-            "width":  127 ,
-            "height":  40 
-            }
-        },
-    
-    
-    "description": ""
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go实现Mqtt broker",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-implement-in-go\/"
+        },"image": {
+                "@type": "ImageObject",
+                "url": "https:\/\/leaxoy.github.io\/cover.png",
+                "width":  800 ,
+                "height":  600 
+            },"genre": "posts","keywords": "MQTT, Go","wordcount":  551 ,
+        "url": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-implement-in-go\/","datePublished": "2019-12-16T15:26:29\x2b08:00","dateModified": "2019-12-16T15:26:29\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                "@type": "Organization",
+                "name": "李大辉",
+                "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/leaxoy.github.io\/logo.png",
+                "width":  127 ,
+                "height":  40 
+                }
+            },"description": ""
     }
-    </script>
-<link rel="stylesheet" href="/css/style.min.css">
-<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
-
-<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
-
-    </head>
-    <body>
-        <script>
+    </script><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/css/lib/animate/animate.min.css"></head>
+    <body><script>
             window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
             window.isDark && document.body.classList.add('dark-theme');
-        </script>
-        <div class="wrapper">
-            <nav class="navbar">
+        </script><div class="wrapper"><nav class="navbar">
     <div class="navbar-container">
         <div class="navbar-header animated bounceIn">
             <a href="https://leaxoy.github.io/">无双</a>
         </div>
-        <div class="navbar-menu">
-            
-            
-                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu"><a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a><a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a><a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a><a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
-</nav>
-<nav class="navbar-mobile">
-     <div class="navbar-container">
+</nav><nav class="navbar-mobile">
+    <div class="navbar-container">
         <div class="navbar-header">
             <div class="navbar-header-title animated bounceIn">
                 <a href="https://leaxoy.github.io/">无双</a>
@@ -110,309 +69,197 @@
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="navbar-menu" id="mobile-menu">
-            
-            
-                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a><a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a><a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a><a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
 </nav><main class="main">
-                <div class="container">
-                    
-    
-    
-    
-
-    <article class="post-warp">
-        <h1 class="post-title animated flipInX">Go实现Mqtt broker</h1>
-
-        <div class="post-meta">
-            <div class="post-meta-main">
-                <a class="author" href="https://leaxoy.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>李大辉&nbsp;</a>
-                <span class="post-category">
-                        收录于
-                        <i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/system/">System</a>
-                            
-                    </span>
-            </div>
-            <div class="post-meta-other">
-                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-16>2019-12-16</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 0 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>预计阅读 0 分钟&nbsp;</div>
-        </div>
-
-        
-
-        <div class="post-toc" id="post-toc">
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">Go实现Mqtt broker</h1><div class="post-meta">
+            <div class="post-meta-main"><a class="author" href="https://leaxoy.github.io/" rel="author" target="_blank">
+                    <i class="fas fa-user-circle fa-fw"></i>李大辉
+                </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/system/">System</a>&nbsp;</span></div>
+            <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-16>2019-12-16</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 551 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 2 分钟&nbsp;</div>
+        </div><div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">目录</h2>
-                <div class="post-toc-content always-active">
-                    <nav id="TableOfContents"></nav>
-                </div>
+                <div class="post-toc-content"><nav id="TableOfContents"></nav></div>
             </div>
             <div class="post-toc-mobile" id="post-toc-mobile">
                 <details>
-                    <summary><div class="post-toc-title"><span>目录</span><span><i class="details icon fas fa-angle-down"></i></span></div></summary>
-                    <div class="post-toc-content">
-                        
-                        
-                        <nav id="TableOfContentsMobile"></nav>
-                    </div>
+                    <summary>
+                        <div class="post-toc-title">
+                            <span>目录</span>
+                            <span><i class="details icon fas fa-angle-down"></i></span>
+                        </div>
+                    </summary>
+                    <div class="post-toc-content"><nav id="TableOfContentsMobile"></nav></div>
                 </details>
-            </div>
-
-        <div class="post-content">
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        </div>
-
-        <div class="post-footer" id="post-footer">
+            </div><div class="post-content"><p>MQTT broker的主要作用有两个，处理Publisher发布的消息，将消息投递给对应的Subscriber。</p>
+<p>服务器的设计因此也分为几个模块：</p>
+<ul>
+<li>Server(broker)模块，接收客户端的连接并分发。</li>
+<li>Connection，客户端连接的抽象，维护了Connection的必要状态，包括最后一次活跃时间，消息发送队列等。</li>
+<li>Subscription Tree，一棵基数树，用来保存所有的订阅关系。</li>
+<li>Arrival Service，消息的重发模块，用来实现Qos1/2的服务质量。</li>
+</ul>
+<p>下面的时序图展示了一个客户端和服务器的交互流程，以及服务器端对客户端发送的消息的处理</p>
+<div class="mermaid" id="mermaid-a59fecec8a89c369c0e62b2a027c972f"></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sequenceDiagram
+    participant Client
+    participant Broker
+    participant Connection
+    participant Auth
+    participant Storage
+    Note over Broker: 启动服务并监听端口
+    Client-&gt;&gt;Broker: 连接
+    Broker-&gt;&gt;Connection: 处理新的连接
+    Connection-&gt;&gt;Auth: 读取Connect消息并进行认证
+    Auth-&gt;&gt;Connection: 认证完成
+    rect rgb(166, 212, 250)
+    	alt 认证失败
+        Connection-&gt;&gt;Client: 返回带有错误码的Connack
+	    else 认证成功
+        Connection-&gt;&gt;Client: 正常返回Connack
+        Connection-&gt;&gt;Storage: 存储Connection信息
+  	  end
+    end
+    rect rgb(246, 165, 192)
+	    loop Read Msg
+        alt Pingreq
+            Connection-&gt;&gt;Client: Pingresp
+        else Subscribe
+            Connection-&gt;&gt;Auth: 依据Topic和Qos进行ACL鉴权认证
+            Auth-&gt;&gt;Connection: 认证完成
+            rect rgb(0, 255, 0)
+            	alt 鉴权成功
+            		Connection-&gt;&gt;Storage: 存储订阅关系
+            		Connection-&gt;&gt;Client: 返回订阅成功的状态
+	            else 鉴权失败
+            		Connection-&gt;&gt;Client: 返回订阅失败的状态
+  	          end
+            end
+        else Unsubscribe
+        		Connection-&gt;&gt;Storage: 删除订阅关系
+        		Connection-&gt;&gt;Client: Unsuback
+        else Disconnect
+            Connection-&gt;&gt;Storage: 删除对应的Connection信息
+            Broker-&gt;&gt;Client: 关闭连接
+        else Publish[^QOS]
+        else Puback
+        else Pubrec
+        else Pubrel
+        else Pubcomp
+        end
+    	end
+    end
+</code></pre></td></tr></table>
+</div>
+</div><p>7000
+14500-&gt;16500
+30000-&gt;35000</p>
+</div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>本文于 2019-12-16 更新</span>
             </div>
-            <div class="post-info-license">
-                
-            </div>
+            <div class="post-info-license"></div>
         </div>
         <div class="post-info-line">
-            <div class="post-info-md">
-                
-            </div>
-            <div class="post-info-share">
-                
-                    <span>
-    
-        <a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f&amp;text=Go%e5%ae%9e%e7%8e%b0Mqtt%20broker&amp;via=" target="_blank" title="Share on Twitter">
+            <div class="post-info-md"></div>
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f&amp;text=Go%e5%ae%9e%e7%8e%b0Mqtt%20broker&amp;via=xxxx" target="_blank" title="分享到 Twitter">
             <i class="fab fa-twitter fa-fw"></i>
-        </a>
-    
-    
-        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f" target="_blank" title="Share on Facebook">
+        </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f" target="_blank" title="分享到 Facebook">
             <i class="fab fa-facebook-square fa-fw"></i>
-        </a>
-    
-    
-        <a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f&amp;title=Go%e5%ae%9e%e7%8e%b0Mqtt%20broker" target="_blank" title="Share on Reddit">
+        </a><a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f&amp;title=Go%e5%ae%9e%e7%8e%b0Mqtt%20broker" target="_blank" title="分享到 Reddit">
             <i class="fab fa-reddit fa-fw"></i>
-        </a>
-    
-    
-    
-    
-    
-    
-    
-    
-</span>
-                
-            </div>
+        </a></span></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section>
-            
-                
-                    <span class="tag">
-                        <a href="https://leaxoy.github.io/tags/mqtt/"><i class="fas fa-tag fa-fw"></i>MQTT</a>
-                    </span>
-                
-                    <span class="tag">
-                        <a href="https://leaxoy.github.io/tags/go/"><i class="fas fa-tag fa-fw"></i>Go</a>
-                    </span>
-                
-            
-        </section>
+        <section><span class="tag">
+                        <a href="https://leaxoy.github.io/tags/mqtt/"><i class="fas fa-tag fa-fw"></i>&nbsp;MQTT</a>&nbsp;
+                    </span><span class="tag">
+                        <a href="https://leaxoy.github.io/tags/go/"><i class="fas fa-tag fa-fw"></i>&nbsp;Go</a>&nbsp;
+                    </span></section>
         <section>
             <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://leaxoy.github.io/">主页</a></span>
         </section>
     </div>
 
-    <div class="post-nav">
-        
-            <a href="https://leaxoy.github.io/2019/12/mqtt-protocol/" class="prev" rel="prev" title="Mqtt协议解析"><i class="fas fa-angle-left fa-fw"></i>Mqtt协议解析</a>
-        
-        
-            <a href="https://leaxoy.github.io/2019/12/rust-startup/" class="next" rel="next" title="Rust初探">Rust初探<i class="fas fa-angle-right fa-fw"></i></a>
-        
-    </div>
-</div>
-
-        <div class="post-comment">
-            
-            
-
-            
-        </div>
+    <div class="post-nav"><a href="https://leaxoy.github.io/2019/12/mqtt-protocol/" class="prev" rel="prev" title="Mqtt协议解析"><i class="fas fa-angle-left fa-fw"></i>Mqtt协议解析</a>
+            <a href="https://leaxoy.github.io/2019/12/rust-startup/" class="next" rel="next" title="Rust初探">Rust初探<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div><div class="post-comment"></div>
     </article></div>
-            </main>
-            <footer class="footer">
-    <div class="copyright">
-        <div class="copyright-line">
-            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+            </main><footer class="footer">
+    <div class="copyright"><div class="copyright-line">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
         </div>
-        <div class="copyright-line">
-            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/">李大辉</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+
+        <div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/" target="_blank">李大辉</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
     </div>
-</footer>
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
-<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
-<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
-
-
-    
-    
-
-    
-
-    
-        <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
-    
-
-    
-
-    
-
-
-
-
-
-
-<script src="/js/blog.min.js"></script>
-
-
-    
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-66543901-1', 'auto');
-	ga('set', 'anonymizeIp', true);
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
-</div>
-        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
-    </body>
+</footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
+            <span>&nbsp;</span>
+        </a><script src="/js/lib/jquery/jquery.slim.min.js"></script><script src="/js/lib/lazysizes/lazysizes.min.js"></script><script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script><link rel="stylesheet" href="/css/lib/katex/katex.min.css"><script src="/js/lib/katex/katex.min.js"></script><script defer src="/js/lib/katex/auto-render.min.js"></script><link rel="stylesheet" href="/css/lib/katex/copy-tex.min.css"><script defer src="/js/lib/katex/copy-tex.min.js"></script><script defer src="/js/lib/katex/mhchem.min.js"></script><script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true },{ left: "$", right: "$", display: false },]
+            });
+        });
+    </script><script src="/js/lib/mermaid/mermaid.min.js"></script><script>mermaid.initialize({startOnLoad: false, theme: null});</script><script>window.mermaidMap={"mermaid-a59fecec8a89c369c0e62b2a027c972f":"sequenceDiagram\n    participant Client\n    participant Broker\n    participant Connection\n    participant Auth\n    participant Storage\n    Note over Broker: 启动服务并监听端口\n    Client-\u003e\u003eBroker: 连接\n    Broker-\u003e\u003eConnection: 处理新的连接\n    Connection-\u003e\u003eAuth: 读取Connect消息并进行认证\n    Auth-\u003e\u003eConnection: 认证完成\n    alt 认证失败\n        Connection-\u003e\u003eClient: 返回带有错误码的Connack\n    else 认证成功\n        Connection-\u003e\u003eClient: 正常返回Connack\n        Connection-\u003e\u003eStorage: 存储Connection信息\n    end\n    loop Read Msg\n        alt Pingreq\n            Connection-\u003e\u003eClient: Pingresp\n        else Subscribe\n            Connection-\u003e\u003eAuth: 依据Topic和Qos进行ACL鉴权认证\n            Auth-\u003e\u003eConnection: 认证完成\n            alt 鉴权成功\n            \tConnection-\u003e\u003eStorage: 存储订阅关系\n            \tConnection-\u003e\u003eClient: 返回订阅成功的状态\n            else 鉴权失败\n            \tConnection-\u003e\u003eClient: 返回订阅失败的状态\n            end\n        else Unsubscribe\n        \tConnection-\u003e\u003eStorage: 删除订阅关系\n        \tConnection-\u003e\u003eClient: Unsuback\n        else Disconnect\n            Connection-\u003e\u003eStorage: 删除对应的Connection信息\n            Broker-\u003e\u003eClient: 关闭连接\n        else Puback\n        else Pubrec\n        else Pubrel\n        else Pubcomp\n        end\n    end"};</script><script src="/js/blog.min.js"></script></body>
 </html>

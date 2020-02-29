@@ -5,9 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Go语言并发安全与不安全 | 无双</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
-<meta name="Description" content="LoveIt 主题演示">
-<link rel="prev" href="https://leaxoy.github.io/2019/12/rust-startup/" />
-<link rel="canonical" href="https://leaxoy.github.io/2019/12/go-concurrent-saft-and-unsafe/" />
+<meta name="Description" content="一枚热爱工作的小白"><link rel="prev" href="https://leaxoy.github.io/2019/12/rust-startup/" /><link rel="canonical" href="https://leaxoy.github.io/2019/12/go-concurrent-saft-and-unsafe/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -15,92 +13,54 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="Go语言并发安全与不安全" />
+<meta property="og:description" content="在开发过程中，我们难免要跨线程/协程进行数据的访问与修改，由此便会产生数据安全性问题，那么对于号称高并发，高性能的go语言来说，又会是怎么样" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://leaxoy.github.io/2019/12/go-concurrent-saft-and-unsafe/" />
+<meta property="article:published_time" content="2019-12-26T12:30:08+08:00" />
+<meta property="article:modified_time" content="2019-12-26T12:30:08+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Go语言并发安全与不安全"/>
 <meta name="twitter:description" content="在开发过程中，我们难免要跨线程/协程进行数据的访问与修改，由此便会产生数据安全性问题，那么对于号称高并发，高性能的go语言来说，又会是怎么样"/>
 <script type="application/ld+json">
     {
-    "@context": "http://schema.org",
-    "@type": "BlogPosting",
-    "headline": "Go语言并发安全与不安全",
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https:\/\/leaxoy.github.io\/2019\/12\/go-concurrent-saft-and-unsafe\/"
-    },
-    
-        "image": {
-            "@type": "ImageObject",
-            "url": "https:\/\/leaxoy.github.io\/cover.png",
-            "width":  800 ,
-            "height":  600 
-        },
-    
-    "genre": "posts",
-    
-        "keywords": "并发, Go",
-    
-    "wordcount":  557 ,
-    "url": "https:\/\/leaxoy.github.io\/2019\/12\/go-concurrent-saft-and-unsafe\/",
-    
-        "datePublished": "2019-12-26T12:30:08\x2b08:00",
-    
-    
-        "dateModified": "2019-12-26T12:30:08\x2b08:00",
-    
-    
-        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
-    
-    
-        "publisher": {
-            "@type": "Organization",
-            "name": "李大辉",
-            "logo": {
-            "@type": "ImageObject",
-            "url": "https:\/\/leaxoy.github.io\/logo.png",
-            "width":  127 ,
-            "height":  40 
-            }
-        },
-    
-    
-    "description": ""
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go语言并发安全与不安全",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/leaxoy.github.io\/2019\/12\/go-concurrent-saft-and-unsafe\/"
+        },"image": {
+                "@type": "ImageObject",
+                "url": "https:\/\/leaxoy.github.io\/cover.png",
+                "width":  800 ,
+                "height":  600 
+            },"genre": "posts","keywords": "并发, Go","wordcount":  557 ,
+        "url": "https:\/\/leaxoy.github.io\/2019\/12\/go-concurrent-saft-and-unsafe\/","datePublished": "2019-12-26T12:30:08\x2b08:00","dateModified": "2019-12-26T12:30:08\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                "@type": "Organization",
+                "name": "李大辉",
+                "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/leaxoy.github.io\/logo.png",
+                "width":  127 ,
+                "height":  40 
+                }
+            },"description": ""
     }
-    </script>
-<link rel="stylesheet" href="/css/style.min.css">
-<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
-
-<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
-
-    </head>
-    <body>
-        <script>
+    </script><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/css/lib/animate/animate.min.css"></head>
+    <body><script>
             window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
             window.isDark && document.body.classList.add('dark-theme');
-        </script>
-        <div class="wrapper">
-            <nav class="navbar">
+        </script><div class="wrapper"><nav class="navbar">
     <div class="navbar-container">
         <div class="navbar-header animated bounceIn">
             <a href="https://leaxoy.github.io/">无双</a>
         </div>
-        <div class="navbar-menu">
-            
-            
-                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu"><a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a><a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a><a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a><a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
-</nav>
-<nav class="navbar-mobile">
-     <div class="navbar-container">
+</nav><nav class="navbar-mobile">
+    <div class="navbar-container">
         <div class="navbar-header">
             <div class="navbar-header-title animated bounceIn">
                 <a href="https://leaxoy.github.io/">无双</a>
@@ -109,117 +69,58 @@
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="navbar-menu" id="mobile-menu">
-            
-            
-                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a><a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a><a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a><a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
 </nav><main class="main">
-                <div class="container">
-                    
-    
-    
-    
-
-    <article class="post-warp">
-        <h1 class="post-title animated flipInX">Go语言并发安全与不安全</h1>
-
-        <div class="post-meta">
-            <div class="post-meta-main">
-                <a class="author" href="https://leaxoy.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>李大辉&nbsp;</a>
-                <span class="post-category">
-                        收录于
-                        <i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/system/">System</a>
-                            
-                    </span>
-            </div>
-            <div class="post-meta-other">
-                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-26>2019-12-26</time>&nbsp;
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">Go语言并发安全与不安全</h1><div class="post-meta">
+            <div class="post-meta-main"><a class="author" href="https://leaxoy.github.io/" rel="author" target="_blank">
+                    <i class="fas fa-user-circle fa-fw"></i>李大辉
+                </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/system/">System</a>&nbsp;</span></div>
+            <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-26>2019-12-26</time>&nbsp;
                 <i class="fas fa-pencil-alt fa-fw"></i>约 557 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 2 分钟&nbsp;</div>
-        </div>
-
-        
-
-        <div class="post-toc" id="post-toc">
+        </div><div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">目录</h2>
-                <div class="post-toc-content always-active">
-                    <nav id="TableOfContents">
+                <div class="post-toc-content"><nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">内置类型</a>
+    <li><a href="#内置类型">内置类型</a>
       <ul>
-        <li><a href="#heading-1">基本类型</a></li>
+        <li><a href="#基本类型">基本类型</a></li>
         <li><a href="#slice">slice</a></li>
         <li><a href="#map">map</a></li>
         <li><a href="#chan">chan</a></li>
       </ul>
     </li>
-    <li><a href="#heading-2">用户类型</a></li>
+    <li><a href="#用户类型">用户类型</a></li>
   </ul>
-</nav>
-                </div>
+</nav></div>
             </div>
             <div class="post-toc-mobile" id="post-toc-mobile">
                 <details>
-                    <summary><div class="post-toc-title"><span>目录</span><span><i class="details icon fas fa-angle-down"></i></span></div></summary>
-                    <div class="post-toc-content">
-                        
-                        
-                        <nav id="TableOfContentsMobile">
+                    <summary>
+                        <div class="post-toc-title">
+                            <span>目录</span>
+                            <span><i class="details icon fas fa-angle-down"></i></span>
+                        </div>
+                    </summary>
+                    <div class="post-toc-content"><nav id="TableOfContentsMobile">
   <ul>
-    <li><a href="#heading">内置类型</a>
+    <li><a href="#内置类型">内置类型</a>
       <ul>
-        <li><a href="#heading-1">基本类型</a></li>
+        <li><a href="#基本类型">基本类型</a></li>
         <li><a href="#slice">slice</a></li>
         <li><a href="#map">map</a></li>
         <li><a href="#chan">chan</a></li>
       </ul>
     </li>
-    <li><a href="#heading-2">用户类型</a></li>
+    <li><a href="#用户类型">用户类型</a></li>
   </ul>
-</nav>
-                    </div>
+</nav></div>
                 </details>
-            </div>
-
-        <div class="post-content">
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            <p>  在开发过程中，我们难免要跨线程/协程进行数据的访问与修改，由此便会产生数据安全性问题，那么对于号称高并发，高性能的go语言来说，又会是怎么样的呢？我们接下来将从内置类型开始，一点一点抽丝剥茧，详细探究并发安全在go中的表现。</p>
-<a class="post-dummy-target" id="heading"></a><h2>内置类型</h2>
-<a class="post-dummy-target" id="heading-1"></a><h3>基本类型</h3>
+            </div><div class="post-content"><p>  在开发过程中，我们难免要跨线程/协程进行数据的访问与修改，由此便会产生数据安全性问题，那么对于号称高并发，高性能的go语言来说，又会是怎么样的呢？我们接下来将从内置类型开始，一点一点抽丝剥茧，详细探究并发安全在go中的表现。</p>
+<a class="post-dummy-target" id="内置类型"></a><h2>内置类型</h2>
+<a class="post-dummy-target" id="基本类型"></a><h3>基本类型</h3>
 <blockquote>
 <p><code>基本类型包括 int(8/16/32/64), uint(8/16/32/64), float(32/64), bool, byte, rune, complex(64/128)</code></p>
 </blockquote>
@@ -260,16 +161,16 @@
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
 		<span class="nx">count</span><span class="o">++</span>
 	<span class="p">}</span>
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">wg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{</span><span class="p">}</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">wg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{}</span>
 	<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
 		<span class="k">go</span> <span class="nf">add</span><span class="p">(</span><span class="nx">wg</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">(</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
 	<span class="nb">println</span><span class="p">(</span><span class="nx">count</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -280,224 +181,57 @@
 <a class="post-dummy-target" id="slice"></a><h3>slice</h3>
 <a class="post-dummy-target" id="map"></a><h3>map</h3>
 <a class="post-dummy-target" id="chan"></a><h3>chan</h3>
-<a class="post-dummy-target" id="heading-2"></a><h2>用户类型</h2>
-
-        </div>
-
-        <div class="post-footer" id="post-footer">
+<a class="post-dummy-target" id="用户类型"></a><h2>用户类型</h2>
+</div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>本文于 2019-12-26 更新</span>
             </div>
-            <div class="post-info-license">
-                
-            </div>
+            <div class="post-info-license"></div>
         </div>
         <div class="post-info-line">
-            <div class="post-info-md">
-                
-            </div>
-            <div class="post-info-share">
-                
-                    <span>
-    
-        <a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-concurrent-saft-and-unsafe%2f&amp;text=Go%e8%af%ad%e8%a8%80%e5%b9%b6%e5%8f%91%e5%ae%89%e5%85%a8%e4%b8%8e%e4%b8%8d%e5%ae%89%e5%85%a8&amp;via=" target="_blank" title="Share on Twitter">
+            <div class="post-info-md"></div>
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-concurrent-saft-and-unsafe%2f&amp;text=Go%e8%af%ad%e8%a8%80%e5%b9%b6%e5%8f%91%e5%ae%89%e5%85%a8%e4%b8%8e%e4%b8%8d%e5%ae%89%e5%85%a8&amp;via=xxxx" target="_blank" title="分享到 Twitter">
             <i class="fab fa-twitter fa-fw"></i>
-        </a>
-    
-    
-        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-concurrent-saft-and-unsafe%2f" target="_blank" title="Share on Facebook">
+        </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-concurrent-saft-and-unsafe%2f" target="_blank" title="分享到 Facebook">
             <i class="fab fa-facebook-square fa-fw"></i>
-        </a>
-    
-    
-        <a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-concurrent-saft-and-unsafe%2f&amp;title=Go%e8%af%ad%e8%a8%80%e5%b9%b6%e5%8f%91%e5%ae%89%e5%85%a8%e4%b8%8e%e4%b8%8d%e5%ae%89%e5%85%a8" target="_blank" title="Share on Reddit">
+        </a><a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-concurrent-saft-and-unsafe%2f&amp;title=Go%e8%af%ad%e8%a8%80%e5%b9%b6%e5%8f%91%e5%ae%89%e5%85%a8%e4%b8%8e%e4%b8%8d%e5%ae%89%e5%85%a8" target="_blank" title="分享到 Reddit">
             <i class="fab fa-reddit fa-fw"></i>
-        </a>
-    
-    
-    
-    
-    
-    
-    
-    
-</span>
-                
-            </div>
+        </a></span></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section>
-            
-                
-                    <span class="tag">
-                        <a href="https://leaxoy.github.io/tags/%E5%B9%B6%E5%8F%91/"><i class="fas fa-tag fa-fw"></i>并发</a>
-                    </span>
-                
-                    <span class="tag">
-                        <a href="https://leaxoy.github.io/tags/go/"><i class="fas fa-tag fa-fw"></i>Go</a>
-                    </span>
-                
-            
-        </section>
+        <section><span class="tag">
+                        <a href="https://leaxoy.github.io/tags/%E5%B9%B6%E5%8F%91/"><i class="fas fa-tag fa-fw"></i>&nbsp;并发</a>&nbsp;
+                    </span><span class="tag">
+                        <a href="https://leaxoy.github.io/tags/go/"><i class="fas fa-tag fa-fw"></i>&nbsp;Go</a>&nbsp;
+                    </span></section>
         <section>
             <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://leaxoy.github.io/">主页</a></span>
         </section>
     </div>
 
-    <div class="post-nav">
-        
-            <a href="https://leaxoy.github.io/2019/12/rust-startup/" class="prev" rel="prev" title="Rust初探"><i class="fas fa-angle-left fa-fw"></i>Rust初探</a>
-        
-        
-    </div>
-</div>
-
-        <div class="post-comment">
-            
-            
-
-            
-        </div>
+    <div class="post-nav"><a href="https://leaxoy.github.io/2019/12/rust-startup/" class="prev" rel="prev" title="Rust初探"><i class="fas fa-angle-left fa-fw"></i>Rust初探</a></div>
+</div><div class="post-comment"></div>
     </article></div>
-            </main>
-            <footer class="footer">
-    <div class="copyright">
-        <div class="copyright-line">
-            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+            </main><footer class="footer">
+    <div class="copyright"><div class="copyright-line">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
         </div>
-        <div class="copyright-line">
-            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/">李大辉</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+
+        <div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/" target="_blank">李大辉</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
     </div>
-</footer>
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
-<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
-<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
-
-
-    
-    
-
-    
-
-    
-        <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
-    
-
-    
-
-    
-
-
-
-
-
-
-<script src="/js/blog.min.js"></script>
-
-
-    
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-66543901-1', 'auto');
-	ga('set', 'anonymizeIp', true);
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
-</div>
-        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
-    </body>
+</footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
+            <span>&nbsp;</span>
+        </a><script src="/js/lib/jquery/jquery.slim.min.js"></script><script src="/js/lib/lazysizes/lazysizes.min.js"></script><script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script><link rel="stylesheet" href="/css/lib/katex/katex.min.css"><script src="/js/lib/katex/katex.min.js"></script><script defer src="/js/lib/katex/auto-render.min.js"></script><link rel="stylesheet" href="/css/lib/katex/copy-tex.min.css"><script defer src="/js/lib/katex/copy-tex.min.js"></script><script defer src="/js/lib/katex/mhchem.min.js"></script><script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true },{ left: "$", right: "$", display: false },]
+            });
+        });
+    </script><script src="/js/blog.min.js"></script></body>
 </html>

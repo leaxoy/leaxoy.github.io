@@ -27,7 +27,7 @@
       <pubDate>Mon, 16 Dec 2019 15:26:29 +0800</pubDate>
       
       <guid>https://leaxoy.github.io/2019/12/mqtt-implement-in-go/</guid>
-      <description></description>
+      <description>MQTT broker的主要作用有两个，处理Publisher发布的消息，将消息投递给对应的Subscriber。 服务器的设计因此也分为几个模块： S</description>
     </item>
     
     <item>

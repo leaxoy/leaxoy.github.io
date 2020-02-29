@@ -5,10 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>深入Go标准库之 Database | 无双</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
-<meta name="Description" content="LoveIt 主题演示">
-<link rel="prev" href="https://leaxoy.github.io/2019/12/im-architecture/" />
-<link rel="next" href="https://leaxoy.github.io/2019/12/flutter-startup/" />
-<link rel="canonical" href="https://leaxoy.github.io/2019/12/go-deep-std-database/" />
+<meta name="Description" content="一枚热爱工作的小白"><link rel="prev" href="https://leaxoy.github.io/2019/12/im-architecture/" /><link rel="next" href="https://leaxoy.github.io/2019/12/flutter-startup/" /><link rel="canonical" href="https://leaxoy.github.io/2019/12/go-deep-std-database/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -16,92 +13,54 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="深入Go标准库之 Database" />
+<meta property="og:description" content="很多应用都离不开数据库的访问与操作，在JAVA中，我们通常使用Mybatis来进行数据库操作，在Python中，通常会使用SQLAlchem" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://leaxoy.github.io/2019/12/go-deep-std-database/" />
+<meta property="article:published_time" content="2019-12-14T11:22:52+08:00" />
+<meta property="article:modified_time" content="2019-12-14T11:22:52+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="深入Go标准库之 Database"/>
 <meta name="twitter:description" content="很多应用都离不开数据库的访问与操作，在JAVA中，我们通常使用Mybatis来进行数据库操作，在Python中，通常会使用SQLAlchem"/>
 <script type="application/ld+json">
     {
-    "@context": "http://schema.org",
-    "@type": "BlogPosting",
-    "headline": "深入Go标准库之 Database",
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https:\/\/leaxoy.github.io\/2019\/12\/go-deep-std-database\/"
-    },
-    
-        "image": {
-            "@type": "ImageObject",
-            "url": "https:\/\/leaxoy.github.io\/cover.png",
-            "width":  800 ,
-            "height":  600 
-        },
-    
-    "genre": "posts",
-    
-        "keywords": "Go, Database",
-    
-    "wordcount":  1474 ,
-    "url": "https:\/\/leaxoy.github.io\/2019\/12\/go-deep-std-database\/",
-    
-        "datePublished": "2019-12-14T11:22:52\x2b08:00",
-    
-    
-        "dateModified": "2019-12-14T11:22:52\x2b08:00",
-    
-    
-        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
-    
-    
-        "publisher": {
-            "@type": "Organization",
-            "name": "李大辉",
-            "logo": {
-            "@type": "ImageObject",
-            "url": "https:\/\/leaxoy.github.io\/logo.png",
-            "width":  127 ,
-            "height":  40 
-            }
-        },
-    
-    
-    "description": ""
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "深入Go标准库之 Database",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/leaxoy.github.io\/2019\/12\/go-deep-std-database\/"
+        },"image": {
+                "@type": "ImageObject",
+                "url": "https:\/\/leaxoy.github.io\/cover.png",
+                "width":  800 ,
+                "height":  600 
+            },"genre": "posts","keywords": "Go, Database","wordcount":  1474 ,
+        "url": "https:\/\/leaxoy.github.io\/2019\/12\/go-deep-std-database\/","datePublished": "2019-12-14T11:22:52\x2b08:00","dateModified": "2019-12-14T11:22:52\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                "@type": "Organization",
+                "name": "李大辉",
+                "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/leaxoy.github.io\/logo.png",
+                "width":  127 ,
+                "height":  40 
+                }
+            },"description": ""
     }
-    </script>
-<link rel="stylesheet" href="/css/style.min.css">
-<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
-
-<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
-
-    </head>
-    <body>
-        <script>
+    </script><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/css/lib/animate/animate.min.css"></head>
+    <body><script>
             window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
             window.isDark && document.body.classList.add('dark-theme');
-        </script>
-        <div class="wrapper">
-            <nav class="navbar">
+        </script><div class="wrapper"><nav class="navbar">
     <div class="navbar-container">
         <div class="navbar-header animated bounceIn">
             <a href="https://leaxoy.github.io/">无双</a>
         </div>
-        <div class="navbar-menu">
-            
-            
-                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu"><a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a><a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a><a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a><a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
-</nav>
-<nav class="navbar-mobile">
-     <div class="navbar-container">
+</nav><nav class="navbar-mobile">
+    <div class="navbar-container">
         <div class="navbar-header">
             <div class="navbar-header-title animated bounceIn">
                 <a href="https://leaxoy.github.io/">无双</a>
@@ -110,62 +69,35 @@
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="navbar-menu" id="mobile-menu">
-            
-            
-                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a><a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a><a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a><a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
 </nav><main class="main">
-                <div class="container">
-                    
-    
-    
-    
-
-    <article class="post-warp">
-        <h1 class="post-title animated flipInX">深入Go标准库之 Database</h1>
-
-        <div class="post-meta">
-            <div class="post-meta-main">
-                <a class="author" href="https://leaxoy.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>李大辉&nbsp;</a>
-                <span class="post-category">
-                        收录于
-                        <i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/golang/">Golang</a>
-                            
-                    </span>
-            </div>
-            <div class="post-meta-other">
-                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-14>2019-12-14</time>&nbsp;
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">深入Go标准库之 Database</h1><div class="post-meta">
+            <div class="post-meta-main"><a class="author" href="https://leaxoy.github.io/" rel="author" target="_blank">
+                    <i class="fas fa-user-circle fa-fw"></i>李大辉
+                </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/golang/">Golang</a>&nbsp;</span></div>
+            <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-14>2019-12-14</time>&nbsp;
                 <i class="fas fa-pencil-alt fa-fw"></i>约 1474 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 3 分钟&nbsp;</div>
-        </div>
-
-        
-
-        <div class="post-toc" id="post-toc">
+        </div><div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">目录</h2>
-                <div class="post-toc-content always-active">
-                    <nav id="TableOfContents">
+                <div class="post-toc-content"><nav id="TableOfContents">
   <ul>
     <li><a href="#databasesql">database/sql</a>
       <ul>
         <li><a href="#register">Register</a></li>
-        <li><a href="#columntype">ColumnType</a></li>
+        <li><a href="#columntype">ColumnType</a>
+          <ul>
+            <li><a href="#columntypedatabasetypename">ColumnType.DatabaseTypeName</a></li>
+          </ul>
+        </li>
         <li><a href="#conn">Conn</a></li>
         <li><a href="#db">DB</a></li>
         <li><a href="#dbstats">DBStats</a></li>
         <li><a href="#isolationlevel">IsolationLevel</a></li>
         <li><a href="#namedarg">NamedArg</a></li>
-        <li><a href="#null-">Null 类型</a></li>
+        <li><a href="#null-类型">Null 类型</a></li>
         <li><a href="#result">Result</a></li>
         <li><a href="#rows">Row(s)</a></li>
         <li><a href="#scanner">Scanner</a></li>
@@ -174,29 +106,34 @@
       </ul>
     </li>
     <li><a href="#databasesqldriver">database/sql/driver</a></li>
-    <li><a href="#heading">自定义类型</a></li>
+    <li><a href="#自定义类型">自定义类型</a></li>
   </ul>
-</nav>
-                </div>
+</nav></div>
             </div>
             <div class="post-toc-mobile" id="post-toc-mobile">
                 <details>
-                    <summary><div class="post-toc-title"><span>目录</span><span><i class="details icon fas fa-angle-down"></i></span></div></summary>
-                    <div class="post-toc-content">
-                        
-                        
-                        <nav id="TableOfContentsMobile">
+                    <summary>
+                        <div class="post-toc-title">
+                            <span>目录</span>
+                            <span><i class="details icon fas fa-angle-down"></i></span>
+                        </div>
+                    </summary>
+                    <div class="post-toc-content"><nav id="TableOfContentsMobile">
   <ul>
     <li><a href="#databasesql">database/sql</a>
       <ul>
         <li><a href="#register">Register</a></li>
-        <li><a href="#columntype">ColumnType</a></li>
+        <li><a href="#columntype">ColumnType</a>
+          <ul>
+            <li><a href="#columntypedatabasetypename">ColumnType.DatabaseTypeName</a></li>
+          </ul>
+        </li>
         <li><a href="#conn">Conn</a></li>
         <li><a href="#db">DB</a></li>
         <li><a href="#dbstats">DBStats</a></li>
         <li><a href="#isolationlevel">IsolationLevel</a></li>
         <li><a href="#namedarg">NamedArg</a></li>
-        <li><a href="#null-">Null 类型</a></li>
+        <li><a href="#null-类型">Null 类型</a></li>
         <li><a href="#result">Result</a></li>
         <li><a href="#rows">Row(s)</a></li>
         <li><a href="#scanner">Scanner</a></li>
@@ -205,40 +142,11 @@
       </ul>
     </li>
     <li><a href="#databasesqldriver">database/sql/driver</a></li>
-    <li><a href="#heading">自定义类型</a></li>
+    <li><a href="#自定义类型">自定义类型</a></li>
   </ul>
-</nav>
-                    </div>
+</nav></div>
                 </details>
-            </div>
-
-        <div class="post-content">
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            <p>  很多应用都离不开数据库的访问与操作，在JAVA中，我们通常使用Mybatis来进行数据库操作，在Python中，通常会使用SQLAlchemy。</p>
+            </div><div class="post-content"><p>  很多应用都离不开数据库的访问与操作，在JAVA中，我们通常使用Mybatis来进行数据库操作，在Python中，通常会使用SQLAlchemy。</p>
 <p>  在Go里面，标准库已经提供了数据库相关的操作，具体的有两个包<code>database/sql</code>和<code>database/sql/driver</code>。<code>database/sql</code>提供了连接池，对于底层的<code>connection</code>操作被隐藏到了该包里面，主要有连接池的维护，底层connection的保活，最大空闲连接数等等都已经实现，对用户来说是透明的。<code>database/sql/driver</code>提供了程序到数据库的映射关系，比如一个类型的转换，数据列信息。通常<code>connection</code>用来实现<code>driver</code>的接口。</p>
 <a class="post-dummy-target" id="databasesql"></a><h2>database/sql</h2>
 <a class="post-dummy-target" id="register"></a><h3>Register</h3>
@@ -306,7 +214,7 @@
 <blockquote>
 <p>需要注意的是，最常用的数据库MySQL的驱动暂不支持这种写法。</p>
 </blockquote>
-<a class="post-dummy-target" id="null-"></a><h3>Null 类型</h3>
+<a class="post-dummy-target" id="null-类型"></a><h3>Null 类型</h3>
 <p>  包含了大量的<code>Null</code>类型，表明一个字段是否为空，<code>NullBool</code>, <code>NullFloat64</code>, <code>NullInt32</code>, <code>NullInt64</code>, <code>NullString</code>, <code>NullTime</code>.</p>
 <p>  如果一个数据库的字段可能为空的话，建议使用这里的类型。可以正确处理零值与<code>null</code>的关系。
 这些类型都实现了<code>sql.Scanner</code>和<code>driver.Valuer</code>接口，分别用来数据库到应用程序的转换以及反向的转换。</p>
@@ -329,7 +237,7 @@
 </blockquote>
 <a class="post-dummy-target" id="tx"></a><h3>Tx</h3>
 <a class="post-dummy-target" id="databasesqldriver"></a><h2>database/sql/driver</h2>
-<a class="post-dummy-target" id="heading"></a><h2>自定义类型</h2>
+<a class="post-dummy-target" id="自定义类型"></a><h2>自定义类型</h2>
 <p>  得益于标准库的设计，我们可以很方便的拓展自己的类型，比如说字符串列表，在数据库中，我们想要存储成<code>string</code>，但是在程序中，我们希望得到的是<code>[]string</code>，如果没有自定义类型的支持，我们将不得不在程序中进行额外的转换，在次数少的时候，尚可cover住，在大量的这种case下，难免会有疏漏。</p>
 <p>  为了实现自定义类型，我们需要两个接口，<code>sql.Scanner</code>和<code>driver.Valuer</code>/<code>driver.ValueConverter</code>，前者支持数据库数据到程序数据的转换，后者支持程序数据到数据库数据的转换。</p>
 <p>Show me the code:</p>
@@ -373,263 +281,95 @@
 </span><span class="lnt">36
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">StringArray</span> <span class="p">[</span><span class="p">]</span><span class="kt">string</span>
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">StringArray</span> <span class="p">[]</span><span class="kt">string</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">StringArray</span><span class="p">)</span> <span class="nf">Scan</span><span class="p">(</span><span class="nx">src</span> <span class="kd">interface</span><span class="p">{</span><span class="p">}</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
-    <span class="k">switch</span> <span class="nx">x</span> <span class="o">:=</span> <span class="nx">src</span><span class="p">.</span><span class="p">(</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">StringArray</span><span class="p">)</span> <span class="nf">Scan</span><span class="p">(</span><span class="nx">src</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="nx">x</span> <span class="o">:=</span> <span class="nx">src</span><span class="p">.(</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">case</span> <span class="kt">string</span><span class="p">:</span>
         <span class="o">*</span><span class="nx">c</span> <span class="p">=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="s">&#34;,&#34;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">nil</span>
-    <span class="k">case</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">:</span>
-        <span class="o">*</span><span class="nx">c</span> <span class="p">=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span><span class="p">,</span> <span class="s">&#34;,&#34;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">:</span>
+        <span class="o">*</span><span class="nx">c</span> <span class="p">=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">x</span><span class="p">),</span> <span class="s">&#34;,&#34;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">nil</span>
     <span class="k">default</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">nil</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="nx">StringArray</span><span class="p">)</span> <span class="nf">ConvertValue</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{</span><span class="p">}</span><span class="p">)</span> <span class="p">(</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Value</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">switch</span> <span class="nx">x</span> <span class="o">:=</span> <span class="nx">v</span><span class="p">.</span><span class="p">(</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="nx">StringArray</span><span class="p">)</span> <span class="nf">ConvertValue</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Value</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="nx">x</span> <span class="o">:=</span> <span class="nx">v</span><span class="p">.(</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">case</span> <span class="o">*</span><span class="nx">StringArray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nx">x</span><span class="p">.</span><span class="nf">Value</span><span class="p">(</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nx">x</span><span class="p">.</span><span class="nf">Value</span><span class="p">()</span>
     <span class="k">case</span> <span class="nx">StringArray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nx">x</span><span class="p">.</span><span class="nf">Value</span><span class="p">(</span><span class="p">)</span>
-    <span class="k">case</span> <span class="p">[</span><span class="p">]</span><span class="kt">string</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nf">StringArray</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span><span class="p">.</span><span class="nf">Value</span><span class="p">(</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nx">x</span><span class="p">.</span><span class="nf">Value</span><span class="p">()</span>
+    <span class="k">case</span> <span class="p">[]</span><span class="kt">string</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nf">StringArray</span><span class="p">(</span><span class="nx">x</span><span class="p">).</span><span class="nf">Value</span><span class="p">()</span>
     <span class="k">case</span> <span class="kt">string</span><span class="p">:</span>
         <span class="k">return</span> <span class="nx">x</span><span class="p">,</span> <span class="kc">nil</span>
-    <span class="k">case</span> <span class="p">[</span><span class="p">]</span><span class="kt">byte</span><span class="p">:</span>
+    <span class="k">case</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">:</span>
         <span class="k">return</span> <span class="nx">x</span><span class="p">,</span> <span class="kc">nil</span>
     <span class="k">default</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="nx">StringArray</span><span class="p">)</span> <span class="nf">Value</span><span class="p">(</span><span class="p">)</span> <span class="p">(</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Value</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="nx">StringArray</span><span class="p">)</span> <span class="nf">Value</span><span class="p">()</span> <span class="p">(</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Value</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">x</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="s">&#34;,&#34;</span><span class="p">)</span>
     <span class="k">return</span> <span class="nx">x</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div>
-        </div>
-
-        <div class="post-footer" id="post-footer">
+</div></div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>本文于 2019-12-14 更新</span>
             </div>
-            <div class="post-info-license">
-                
-            </div>
+            <div class="post-info-license"></div>
         </div>
         <div class="post-info-line">
-            <div class="post-info-md">
-                
-            </div>
-            <div class="post-info-share">
-                
-                    <span>
-    
-        <a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-database%2f&amp;text=%e6%b7%b1%e5%85%a5Go%e6%a0%87%e5%87%86%e5%ba%93%e4%b9%8b%20Database&amp;via=" target="_blank" title="Share on Twitter">
+            <div class="post-info-md"></div>
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-database%2f&amp;text=%e6%b7%b1%e5%85%a5Go%e6%a0%87%e5%87%86%e5%ba%93%e4%b9%8b%20Database&amp;via=xxxx" target="_blank" title="分享到 Twitter">
             <i class="fab fa-twitter fa-fw"></i>
-        </a>
-    
-    
-        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-database%2f" target="_blank" title="Share on Facebook">
+        </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-database%2f" target="_blank" title="分享到 Facebook">
             <i class="fab fa-facebook-square fa-fw"></i>
-        </a>
-    
-    
-        <a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-database%2f&amp;title=%e6%b7%b1%e5%85%a5Go%e6%a0%87%e5%87%86%e5%ba%93%e4%b9%8b%20Database" target="_blank" title="Share on Reddit">
+        </a><a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fgo-deep-std-database%2f&amp;title=%e6%b7%b1%e5%85%a5Go%e6%a0%87%e5%87%86%e5%ba%93%e4%b9%8b%20Database" target="_blank" title="分享到 Reddit">
             <i class="fab fa-reddit fa-fw"></i>
-        </a>
-    
-    
-    
-    
-    
-    
-    
-    
-</span>
-                
-            </div>
+        </a></span></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section>
-            
-                
-                    <span class="tag">
-                        <a href="https://leaxoy.github.io/tags/go/"><i class="fas fa-tag fa-fw"></i>Go</a>
-                    </span>
-                
-                    <span class="tag">
-                        <a href="https://leaxoy.github.io/tags/database/"><i class="fas fa-tag fa-fw"></i>Database</a>
-                    </span>
-                
-            
-        </section>
+        <section><span class="tag">
+                        <a href="https://leaxoy.github.io/tags/go/"><i class="fas fa-tag fa-fw"></i>&nbsp;Go</a>&nbsp;
+                    </span><span class="tag">
+                        <a href="https://leaxoy.github.io/tags/database/"><i class="fas fa-tag fa-fw"></i>&nbsp;Database</a>&nbsp;
+                    </span></section>
         <section>
             <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://leaxoy.github.io/">主页</a></span>
         </section>
     </div>
 
-    <div class="post-nav">
-        
-            <a href="https://leaxoy.github.io/2019/12/im-architecture/" class="prev" rel="prev" title="通用IM架构"><i class="fas fa-angle-left fa-fw"></i>通用IM架构</a>
-        
-        
-            <a href="https://leaxoy.github.io/2019/12/flutter-startup/" class="next" rel="next" title="Flutter Startup">Flutter Startup<i class="fas fa-angle-right fa-fw"></i></a>
-        
-    </div>
-</div>
-
-        <div class="post-comment">
-            
-            
-
-            
-        </div>
+    <div class="post-nav"><a href="https://leaxoy.github.io/2019/12/im-architecture/" class="prev" rel="prev" title="通用IM架构"><i class="fas fa-angle-left fa-fw"></i>通用IM架构</a>
+            <a href="https://leaxoy.github.io/2019/12/flutter-startup/" class="next" rel="next" title="Flutter Startup">Flutter Startup<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div><div class="post-comment"></div>
     </article></div>
-            </main>
-            <footer class="footer">
-    <div class="copyright">
-        <div class="copyright-line">
-            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+            </main><footer class="footer">
+    <div class="copyright"><div class="copyright-line">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
         </div>
-        <div class="copyright-line">
-            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/">李大辉</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+
+        <div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/" target="_blank">李大辉</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
     </div>
-</footer>
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
-<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
-<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
-
-
-    
-    
-
-    
-
-    
-        <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
-    
-
-    
-
-    
-
-
-
-
-
-
-<script src="/js/blog.min.js"></script>
-
-
-    
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-66543901-1', 'auto');
-	ga('set', 'anonymizeIp', true);
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
-</div>
-        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
-    </body>
+</footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
+            <span>&nbsp;</span>
+        </a><script src="/js/lib/jquery/jquery.slim.min.js"></script><script src="/js/lib/lazysizes/lazysizes.min.js"></script><script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script><link rel="stylesheet" href="/css/lib/katex/katex.min.css"><script src="/js/lib/katex/katex.min.js"></script><script defer src="/js/lib/katex/auto-render.min.js"></script><link rel="stylesheet" href="/css/lib/katex/copy-tex.min.css"><script defer src="/js/lib/katex/copy-tex.min.js"></script><script defer src="/js/lib/katex/mhchem.min.js"></script><script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true },{ left: "$", right: "$", display: false },]
+            });
+        });
+    </script><script src="/js/blog.min.js"></script></body>
 </html>

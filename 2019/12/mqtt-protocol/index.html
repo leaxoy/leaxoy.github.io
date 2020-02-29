@@ -5,10 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Mqtt协议解析 | 无双</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noodp" />
-<meta name="Description" content="LoveIt 主题演示">
-<link rel="prev" href="https://leaxoy.github.io/2019/12/concurrent-model-overview/" />
-<link rel="next" href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" />
-<link rel="canonical" href="https://leaxoy.github.io/2019/12/mqtt-protocol/" />
+<meta name="Description" content="一枚热爱工作的小白"><link rel="prev" href="https://leaxoy.github.io/2019/12/concurrent-model-overview/" /><link rel="next" href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" /><link rel="canonical" href="https://leaxoy.github.io/2019/12/mqtt-protocol/" />
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -16,92 +13,54 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff"><meta property="og:title" content="Mqtt协议解析" />
+<meta property="og:description" content="这篇属于IM三剑客中的第二篇，前面一篇主要讲解了通用IM的一些架构的知识，这边主要讲解MQTT协议的细节，最后一篇将会着重介绍了MQTT Br" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://leaxoy.github.io/2019/12/mqtt-protocol/" />
+<meta property="article:published_time" content="2019-12-16T15:26:17+08:00" />
+<meta property="article:modified_time" content="2019-12-16T15:26:17+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Mqtt协议解析"/>
 <meta name="twitter:description" content="这篇属于IM三剑客中的第二篇，前面一篇主要讲解了通用IM的一些架构的知识，这边主要讲解MQTT协议的细节，最后一篇将会着重介绍了MQTT Br"/>
 <script type="application/ld+json">
     {
-    "@context": "http://schema.org",
-    "@type": "BlogPosting",
-    "headline": "Mqtt协议解析",
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-protocol\/"
-    },
-    
-        "image": {
-            "@type": "ImageObject",
-            "url": "https:\/\/leaxoy.github.io\/cover.png",
-            "width":  800 ,
-            "height":  600 
-        },
-    
-    "genre": "posts",
-    
-        "keywords": "MQTT",
-    
-    "wordcount":  2062 ,
-    "url": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-protocol\/",
-    
-        "datePublished": "2019-12-16T15:26:17\x2b08:00",
-    
-    
-        "dateModified": "2019-12-16T15:26:17\x2b08:00",
-    
-    
-        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
-    
-    
-        "publisher": {
-            "@type": "Organization",
-            "name": "李大辉",
-            "logo": {
-            "@type": "ImageObject",
-            "url": "https:\/\/leaxoy.github.io\/logo.png",
-            "width":  127 ,
-            "height":  40 
-            }
-        },
-    
-    
-    "description": ""
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Mqtt协议解析",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-protocol\/"
+        },"image": {
+                "@type": "ImageObject",
+                "url": "https:\/\/leaxoy.github.io\/cover.png",
+                "width":  800 ,
+                "height":  600 
+            },"genre": "posts","keywords": "MQTT","wordcount":  3386 ,
+        "url": "https:\/\/leaxoy.github.io\/2019\/12\/mqtt-protocol\/","datePublished": "2019-12-16T15:26:17\x2b08:00","dateModified": "2019-12-16T15:26:17\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+                "@type": "Organization",
+                "name": "李大辉",
+                "logo": {
+                "@type": "ImageObject",
+                "url": "https:\/\/leaxoy.github.io\/logo.png",
+                "width":  127 ,
+                "height":  40 
+                }
+            },"description": ""
     }
-    </script>
-<link rel="stylesheet" href="/css/style.min.css">
-<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
-
-<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
-
-    </head>
-    <body>
-        <script>
+    </script><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/css/lib/animate/animate.min.css"></head>
+    <body><script>
             window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
             window.isDark && document.body.classList.add('dark-theme');
-        </script>
-        <div class="wrapper">
-            <nav class="navbar">
+        </script><div class="wrapper"><nav class="navbar">
     <div class="navbar-container">
         <div class="navbar-header animated bounceIn">
             <a href="https://leaxoy.github.io/">无双</a>
         </div>
-        <div class="navbar-menu">
-            
-            
-                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu"><a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a><a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a><a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a><a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
-</nav>
-<nav class="navbar-mobile">
-     <div class="navbar-container">
+</nav><nav class="navbar-mobile">
+    <div class="navbar-container">
         <div class="navbar-header">
             <div class="navbar-header-title animated bounceIn">
                 <a href="https://leaxoy.github.io/">无双</a>
@@ -110,55 +69,24 @@
                 <span></span><span></span><span></span>
             </div>
         </div>
-        <div class="navbar-menu" id="mobile-menu">
-            
-            
-                <a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a>
-            
-                <a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a>
-            
-            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        <div class="navbar-menu" id="mobile-menu"><a class="menu-item" href="https://leaxoy.github.io/posts" title="">文章</a><a class="menu-item" href="https://leaxoy.github.io/tags" title="">标签</a><a class="menu-item" href="https://leaxoy.github.io/categories" title="">分类</a><a class="menu-item" href="https://leaxoy.github.io/about" title="">关于</a><a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw" title="切换主题"></i></a>
         </div>
     </div>
 </nav><main class="main">
-                <div class="container">
-                    
-    
-    
-    
-
-    <article class="post-warp">
-        <h1 class="post-title animated flipInX">Mqtt协议解析</h1>
-
-        <div class="post-meta">
-            <div class="post-meta-main">
-                <a class="author" href="https://leaxoy.github.io/" rel="author"><i class="fas fa-user-circle fa-fw"></i>李大辉&nbsp;</a>
-                <span class="post-category">
-                        收录于
-                        <i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/system/">System</a>
-                            
-                    </span>
-            </div>
-            <div class="post-meta-other">
-                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-16>2019-12-16</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 2062 字&nbsp;
-                <i class="far fa-clock fa-fw"></i>预计阅读 5 分钟&nbsp;</div>
-        </div>
-
-        
-
-        <div class="post-toc" id="post-toc">
+                <div class="container"><article class="page"><h1 class="post-title animated flipInX">Mqtt协议解析</h1><div class="post-meta">
+            <div class="post-meta-main"><a class="author" href="https://leaxoy.github.io/" rel="author" target="_blank">
+                    <i class="fas fa-user-circle fa-fw"></i>李大辉
+                </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/system/">System</a>&nbsp;</span></div>
+            <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2019-12-16>2019-12-16</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 3386 字&nbsp;
+                <i class="far fa-clock fa-fw"></i>预计阅读 7 分钟&nbsp;</div>
+        </div><div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">目录</h2>
-                <div class="post-toc-content always-active">
-                    <nav id="TableOfContents">
+                <div class="post-toc-content"><nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">相关术语</a>
+    <li><a href="#相关术语">相关术语</a>
       <ul>
-        <li><a href="#client">Client(客户端)</a></li>
+        <li><a href="#client客户端">Client(客户端)</a></li>
         <li><a href="#session">Session</a></li>
         <li><a href="#broker">Broker</a></li>
         <li><a href="#subscription">Subscription</a></li>
@@ -168,55 +96,63 @@
         <li><a href="#subscriber">Subscriber</a></li>
       </ul>
     </li>
-    <li><a href="#heading-1">数据解包</a>
+    <li><a href="#数据解包">数据解包</a>
       <ul>
-        <li><a href="#heading-2">第一个字节</a></li>
-        <li><a href="#heading-3">剩下的字节</a></li>
+        <li><a href="#第一个字节">第一个字节</a>
+          <ul>
+            <li><a href="#剩下的4bit">剩下的4bit</a></li>
+          </ul>
+        </li>
+        <li><a href="#剩下的字节">剩下的字节</a></li>
       </ul>
     </li>
-    <li><a href="#heading-4">连接与认证</a>
+    <li><a href="#消息类型">消息类型</a>
       <ul>
-        <li><a href="#connect1">Connect(1)</a></li>
-        <li><a href="#connack2">Connack(2)</a></li>
+        <li><a href="#连接与认证">连接与认证</a>
+          <ul>
+            <li><a href="#connect1">Connect(<code>1</code>)</a></li>
+            <li><a href="#connack2">Connack(<code>2</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#心跳与保活">心跳与保活</a>
+          <ul>
+            <li><a href="#pingreq12">Pingreq(<code>12</code>)</a></li>
+            <li><a href="#pingresp13">Pingresp(<code>13</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#订阅">订阅</a>
+          <ul>
+            <li><a href="#subscribe8">Subscribe(<code>8</code>)</a></li>
+            <li><a href="#suback9">Suback(<code>9</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#取消订阅">取消订阅</a>
+          <ul>
+            <li><a href="#unsubscribe10">Unsubscribe(<code>10</code>)</a></li>
+            <li><a href="#unsuback11">Unsuback(<code>11</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#发布消息">发布消息</a>
+          <ul>
+            <li><a href="#publish3">Publish(<code>3</code>)</a></li>
+            <li><a href="#pubrel6">Pubrel(<code>6</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#接收消息">接收消息</a>
+          <ul>
+            <li><a href="#puback4">Puback(<code>4</code>)</a></li>
+            <li><a href="#pubrec5">Pubrec(<code>5</code>)</a></li>
+            <li><a href="#pubcomp7">Pubcomp(<code>7</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#断开连接">断开连接</a>
+          <ul>
+            <li><a href="#disconnect14">Disconnect(<code>14</code>)</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
-    <li><a href="#heading-5">心跳与保活</a>
-      <ul>
-        <li><a href="#pingreq12">Pingreq(12)</a></li>
-        <li><a href="#pingresp13">Pingresp(13)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-6">订阅</a>
-      <ul>
-        <li><a href="#subscribe8">Subscribe(8)</a></li>
-        <li><a href="#suback9">Suback(9)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-7">取消订阅</a>
-      <ul>
-        <li><a href="#unsubscribe10">Unsubscribe(10)</a></li>
-        <li><a href="#unsuback11">Unsuback(11)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-8">发布消息</a>
-      <ul>
-        <li><a href="#publish3">Publish(3)</a></li>
-        <li><a href="#pubrel6">Pubrel(6)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-9">接收消息</a>
-      <ul>
-        <li><a href="#puback4">Puback(4)</a></li>
-        <li><a href="#pubrec5">Pubrec(5)</a></li>
-        <li><a href="#pubcomp7">Pubcomp(7)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-10">断开连接</a>
-      <ul>
-        <li><a href="#disconnect14">Disconnect(14)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-11">服务质量保证</a>
+    <li><a href="#服务质量保证">服务质量保证</a>
       <ul>
         <li><a href="#qos-0">Qos 0</a></li>
         <li><a href="#qos-1">Qos 1</a></li>
@@ -224,20 +160,21 @@
       </ul>
     </li>
   </ul>
-</nav>
-                </div>
+</nav></div>
             </div>
             <div class="post-toc-mobile" id="post-toc-mobile">
                 <details>
-                    <summary><div class="post-toc-title"><span>目录</span><span><i class="details icon fas fa-angle-down"></i></span></div></summary>
-                    <div class="post-toc-content">
-                        
-                        
-                        <nav id="TableOfContentsMobile">
+                    <summary>
+                        <div class="post-toc-title">
+                            <span>目录</span>
+                            <span><i class="details icon fas fa-angle-down"></i></span>
+                        </div>
+                    </summary>
+                    <div class="post-toc-content"><nav id="TableOfContentsMobile">
   <ul>
-    <li><a href="#heading">相关术语</a>
+    <li><a href="#相关术语">相关术语</a>
       <ul>
-        <li><a href="#client">Client(客户端)</a></li>
+        <li><a href="#client客户端">Client(客户端)</a></li>
         <li><a href="#session">Session</a></li>
         <li><a href="#broker">Broker</a></li>
         <li><a href="#subscription">Subscription</a></li>
@@ -247,55 +184,63 @@
         <li><a href="#subscriber">Subscriber</a></li>
       </ul>
     </li>
-    <li><a href="#heading-1">数据解包</a>
+    <li><a href="#数据解包">数据解包</a>
       <ul>
-        <li><a href="#heading-2">第一个字节</a></li>
-        <li><a href="#heading-3">剩下的字节</a></li>
+        <li><a href="#第一个字节">第一个字节</a>
+          <ul>
+            <li><a href="#剩下的4bit">剩下的4bit</a></li>
+          </ul>
+        </li>
+        <li><a href="#剩下的字节">剩下的字节</a></li>
       </ul>
     </li>
-    <li><a href="#heading-4">连接与认证</a>
+    <li><a href="#消息类型">消息类型</a>
       <ul>
-        <li><a href="#connect1">Connect(1)</a></li>
-        <li><a href="#connack2">Connack(2)</a></li>
+        <li><a href="#连接与认证">连接与认证</a>
+          <ul>
+            <li><a href="#connect1">Connect(<code>1</code>)</a></li>
+            <li><a href="#connack2">Connack(<code>2</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#心跳与保活">心跳与保活</a>
+          <ul>
+            <li><a href="#pingreq12">Pingreq(<code>12</code>)</a></li>
+            <li><a href="#pingresp13">Pingresp(<code>13</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#订阅">订阅</a>
+          <ul>
+            <li><a href="#subscribe8">Subscribe(<code>8</code>)</a></li>
+            <li><a href="#suback9">Suback(<code>9</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#取消订阅">取消订阅</a>
+          <ul>
+            <li><a href="#unsubscribe10">Unsubscribe(<code>10</code>)</a></li>
+            <li><a href="#unsuback11">Unsuback(<code>11</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#发布消息">发布消息</a>
+          <ul>
+            <li><a href="#publish3">Publish(<code>3</code>)</a></li>
+            <li><a href="#pubrel6">Pubrel(<code>6</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#接收消息">接收消息</a>
+          <ul>
+            <li><a href="#puback4">Puback(<code>4</code>)</a></li>
+            <li><a href="#pubrec5">Pubrec(<code>5</code>)</a></li>
+            <li><a href="#pubcomp7">Pubcomp(<code>7</code>)</a></li>
+          </ul>
+        </li>
+        <li><a href="#断开连接">断开连接</a>
+          <ul>
+            <li><a href="#disconnect14">Disconnect(<code>14</code>)</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
-    <li><a href="#heading-5">心跳与保活</a>
-      <ul>
-        <li><a href="#pingreq12">Pingreq(12)</a></li>
-        <li><a href="#pingresp13">Pingresp(13)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-6">订阅</a>
-      <ul>
-        <li><a href="#subscribe8">Subscribe(8)</a></li>
-        <li><a href="#suback9">Suback(9)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-7">取消订阅</a>
-      <ul>
-        <li><a href="#unsubscribe10">Unsubscribe(10)</a></li>
-        <li><a href="#unsuback11">Unsuback(11)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-8">发布消息</a>
-      <ul>
-        <li><a href="#publish3">Publish(3)</a></li>
-        <li><a href="#pubrel6">Pubrel(6)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-9">接收消息</a>
-      <ul>
-        <li><a href="#puback4">Puback(4)</a></li>
-        <li><a href="#pubrec5">Pubrec(5)</a></li>
-        <li><a href="#pubcomp7">Pubcomp(7)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-10">断开连接</a>
-      <ul>
-        <li><a href="#disconnect14">Disconnect(14)</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading-11">服务质量保证</a>
+    <li><a href="#服务质量保证">服务质量保证</a>
       <ul>
         <li><a href="#qos-0">Qos 0</a></li>
         <li><a href="#qos-1">Qos 1</a></li>
@@ -303,55 +248,34 @@
       </ul>
     </li>
   </ul>
-</nav>
-                    </div>
+</nav></div>
                 </details>
-            </div>
-
-        <div class="post-content">
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            <blockquote>
+            </div><div class="post-content"><blockquote>
 <p>这篇属于IM三剑客中的第二篇，前面一篇主要讲解了通用IM的一些架构的知识，这边主要讲解<code>MQTT</code>协议的细节，最后一篇将会着重介绍了MQTT Broker的Go语言实现。</p>
 <ul>
-<li><a href="https://leaxoy.github.io/2019/12/im-architecture/">通用IM架构</a></li>
-<li><a href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/">Go实现Mqtt broker</a></li>
+<li><a href="https://leaxoy.github.io/2019/12/im-architecture/" target="_blank">通用IM架构</a></li>
+<li><a href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" target="_blank">Go实现Mqtt broker</a></li>
 </ul>
 </blockquote>
 <p>  MQTT协议以其效率高，语义完善而著名，非常适合使用在移动设备中，可以大幅度的减少耗电量。相对于TCP，语义更加丰富，额外的overload小，最少只需要2byte；相对于其他的应用层协议Websocket等，头部简单，包体积更小。</p>
-<a class="post-dummy-target" id="heading"></a><h2>相关术语</h2>
-<a class="post-dummy-target" id="client"></a><h3>Client(客户端)</h3>
+<a class="post-dummy-target" id="相关术语"></a><h2>相关术语</h2>
+<a class="post-dummy-target" id="client客户端"></a><h3>Client(客户端)</h3>
+<p>客户端通常是用户手中的移动设备，传感器等，客户端在整个mqtt流程中既有publisher的作用，还有subscriber的作用，当作publisher的时候，客户端可以进行数据的上报，作为subscriber的时候，可以接收服务端推送的消息。</p>
 <a class="post-dummy-target" id="session"></a><h3>Session</h3>
+<p>持久化的回话，一个session对应一个client，session会把还未来得及投递的消息进行持久化，以便下次client连接时进行推送。</p>
 <a class="post-dummy-target" id="broker"></a><h3>Broker</h3>
+<p>服务器端，client连接的对象，保存有所有的subscriber和publisher信息及其订阅关系，同时也用作消息的分发功能。</p>
 <a class="post-dummy-target" id="subscription"></a><h3>Subscription</h3>
+<p>订阅关系，client可以依据topic进行订阅，可以接收发布到该topic的信息。</p>
 <a class="post-dummy-target" id="topic"></a><h3>Topic</h3>
+<p>Topic用作订阅关系的维系，类似于channel的概念。</p>
 <a class="post-dummy-target" id="topic-filter"></a><h3>Topic Filter</h3>
+<p>主题过滤器，在MQTT中，topic可以是精确订阅，也可以是模糊订阅，发布到一个topic的消息，通过主题过滤器获取所有匹配的topic进行投递。</p>
 <a class="post-dummy-target" id="publisher"></a><h3>Publisher</h3>
+<p>发布者，通常是客户端，向broker发布消息，borker收到消息后依据topic进行投递。</p>
 <a class="post-dummy-target" id="subscriber"></a><h3>Subscriber</h3>
-<a class="post-dummy-target" id="heading-1"></a><h2>数据解包</h2>
+<p>订阅者，通常是客户端，订阅topic以接收broker分发的消息。</p>
+<a class="post-dummy-target" id="数据解包"></a><h2>数据解包</h2>
 <p>  <code>MQTT</code>数据包共分为三部分，<code>FixedHeader</code>, <code>Variable Header</code> 和 <code>Payload</code>, 其中只有<code>FixedHeader</code>是必须的，<code>Variable Header</code>和<code>Payload</code>部分是可选的。这部分着重介绍<code>FixedHeader</code>，可选部分将在下面的详细介绍中涉及。</p>
 <p>  固定头部的长度为<code>2...5 byte</code>，说到这里，可能有人迷糊了，既然说的是固定头部，怎么长度还有不同的选项呢。其实固定头部的意思并不是说长度固定，而是说每个数据包必须包含的意思，哪怕一个数据包什么内容都没有，也要有一个长度为2的头部数据。那么长度不固定的固定头部又该如何解释呢，因为不同的场景数据包的大小也不近相同，为了能让服务端知晓如何解析，解析到何处，就必须要把数据包的大小给编码到数据包中，数据包有大有小，如果用一个比较小的数字的话，就无法发送大于该数字的数据了，如果数据包比较小，但是编码用的数字又比较大的话，就会造成浪费的现象，所以针对不同大小的数据，需要用不同的方式对长度进行编码，这就是可变长度的由来。</p>
 <blockquote>
@@ -430,48 +354,49 @@
 </tr>
 </tbody>
 </table>
-<a class="post-dummy-target" id="heading-2"></a><h3>第一个字节</h3>
-<p>  第一个字节主要用做消息类型的控制，以及对应消息类型的额外的属性。按照bit分割，共有8bit，前四个bit用来表示数据包的类型，是connect还是publish，除了0和15外（用作保留类型），其他的14中均有不同的定义，下方分别给出了14中类型的详细的解释。</p>
-<a class="post-dummy-target" id="4bit"></a><h4>剩下的4bit</h4>
+<a class="post-dummy-target" id="第一个字节"></a><h3>第一个字节</h3>
+<p>  第一个字节主要用做消息类型的控制，以及对应消息类型的额外的属性。按照bit分割，共有8bit，前四个bit用来表示数据包的类型，是connect还是publish，除了0和15外（用作保留类型），其他的14中均有不同的定义，下方分别给出了14中类型的详细的解释。<a href="#%e6%b6%88%e6%81%af%e7%b1%bb%e5%9e%8b"><strong>详细解释</strong></a></p>
+<a class="post-dummy-target" id="剩下的4bit"></a><h4>剩下的4bit</h4>
 <ul>
 <li>第一个bit，是<code>Duplicated</code>的意思，用在<code>publish</code>中<code>qos</code>为<code>1/2</code>的情况，用来表明该消息是否为一条重复的消息。</li>
 <li>第2/3个bit，声明了<code>qos</code>的级别，可选的有<code>(0b00, 0b01, 0b10)</code>，分别代表了<code>(QOS0, QOS1, QOS2)</code>，不能有3，如果是3的话，会被认为成一个非法的数据包。</li>
 <li>第四个bit，<code>Retained</code>，告知broker是否要将消息持久化，以供后来的订阅者消费。</li>
 </ul>
-<a class="post-dummy-target" id="heading-3"></a><h3>剩下的字节</h3>
+<a class="post-dummy-target" id="剩下的字节"></a><h3>剩下的字节</h3>
 <p>  这个部分用来表示剩下的数据的长度，前面说了，这个部分长度是可变的，范围为<code>1-4</code>，那么如果来确定长度是1还是其他的呢，秘密就藏在字节的最高位(7bit)，这部分的所有数据，最高位bit都表明有没有后续的长度，如果这个值为0的话，表明没有后续的数据了，如果是一的话，表明还需要继续计算长度，因此能表明的数字最小为0，最大为<code>128 * 128 * 128 * 128 = 268435456 byte = 256 Mb</code>。</p>
-<a class="post-dummy-target" id="heading-4"></a><h2>连接与认证</h2>
-<a class="post-dummy-target" id="connect1"></a><h3>Connect(<code>1</code>)</h3>
+<a class="post-dummy-target" id="消息类型"></a><h2>消息类型</h2>
+<a class="post-dummy-target" id="连接与认证"></a><h3>连接与认证</h3>
+<a class="post-dummy-target" id="connect1"></a><h4>Connect(<code>1</code>)</h4>
 <p>  当客户端建立好与服务器的连接后，客户端发送的第一个报文必须是<code>Connect</code>，并且只能发送一次，服务端在收到第二个Connect的时候，会认为客户端异常而断开连接。·</p>
-<a class="post-dummy-target" id="connack2"></a><h3>Connack(<code>2</code>)</h3>
+<a class="post-dummy-target" id="connack2"></a><h4>Connack(<code>2</code>)</h4>
 <p>服务端响应，</p>
-<a class="post-dummy-target" id="heading-5"></a><h2>心跳与保活</h2>
-<a class="post-dummy-target" id="pingreq12"></a><h3>Pingreq(<code>12</code>)</h3>
+<a class="post-dummy-target" id="心跳与保活"></a><h3>心跳与保活</h3>
+<a class="post-dummy-target" id="pingreq12"></a><h4>Pingreq(<code>12</code>)</h4>
 <p>客户端发送，无<code>Variable Header</code>与<code>Payload</code>，</p>
-<a class="post-dummy-target" id="pingresp13"></a><h3>Pingresp(<code>13</code>)</h3>
+<a class="post-dummy-target" id="pingresp13"></a><h4>Pingresp(<code>13</code>)</h4>
 <p>服务端响应，无<code>Variable Header</code>与<code>Payload</code>，</p>
-<a class="post-dummy-target" id="heading-6"></a><h2>订阅</h2>
-<a class="post-dummy-target" id="subscribe8"></a><h3>Subscribe(<code>8</code>)</h3>
-<a class="post-dummy-target" id="suback9"></a><h3>Suback(<code>9</code>)</h3>
-<a class="post-dummy-target" id="heading-7"></a><h2>取消订阅</h2>
-<a class="post-dummy-target" id="unsubscribe10"></a><h3>Unsubscribe(<code>10</code>)</h3>
-<a class="post-dummy-target" id="unsuback11"></a><h3>Unsuback(<code>11</code>)</h3>
-<a class="post-dummy-target" id="heading-8"></a><h2>发布消息</h2>
-<a class="post-dummy-target" id="publish3"></a><h3>Publish(<code>3</code>)</h3>
-<a class="post-dummy-target" id="pubrel6"></a><h3>Pubrel(<code>6</code>)</h3>
+<a class="post-dummy-target" id="订阅"></a><h3>订阅</h3>
+<a class="post-dummy-target" id="subscribe8"></a><h4>Subscribe(<code>8</code>)</h4>
+<a class="post-dummy-target" id="suback9"></a><h4>Suback(<code>9</code>)</h4>
+<a class="post-dummy-target" id="取消订阅"></a><h3>取消订阅</h3>
+<a class="post-dummy-target" id="unsubscribe10"></a><h4>Unsubscribe(<code>10</code>)</h4>
+<a class="post-dummy-target" id="unsuback11"></a><h4>Unsuback(<code>11</code>)</h4>
+<a class="post-dummy-target" id="发布消息"></a><h3>发布消息</h3>
+<a class="post-dummy-target" id="publish3"></a><h4>Publish(<code>3</code>)</h4>
+<a class="post-dummy-target" id="pubrel6"></a><h4>Pubrel(<code>6</code>)</h4>
 <p>用在<code>QOS2</code>消息的第二阶段，</p>
-<a class="post-dummy-target" id="heading-9"></a><h2>接收消息</h2>
-<a class="post-dummy-target" id="puback4"></a><h3>Puback(<code>4</code>)</h3>
+<a class="post-dummy-target" id="接收消息"></a><h3>接收消息</h3>
+<a class="post-dummy-target" id="puback4"></a><h4>Puback(<code>4</code>)</h4>
 <p>  用在<code>QOS1</code>的消息上，当收到<code>QOS1</code>的消息后，马上回复<code>Puback</code>的消息，同时设置<code>MessageId</code>为<code>Publish</code>消息的<code>MessageId</code>，</p>
-<a class="post-dummy-target" id="pubrec5"></a><h3>Pubrec(<code>5</code>)</h3>
+<a class="post-dummy-target" id="pubrec5"></a><h4>Pubrec(<code>5</code>)</h4>
 <p>  用在<code>QOS2</code>消息的第一阶段</p>
-<a class="post-dummy-target" id="pubcomp7"></a><h3>Pubcomp(<code>7</code>)</h3>
+<a class="post-dummy-target" id="pubcomp7"></a><h4>Pubcomp(<code>7</code>)</h4>
 <p>  用在<code>QOS2</code>消息的第二阶段</p>
-<a class="post-dummy-target" id="heading-10"></a><h2>断开连接</h2>
-<a class="post-dummy-target" id="disconnect14"></a><h3>Disconnect(<code>14</code>)</h3>
+<a class="post-dummy-target" id="断开连接"></a><h3>断开连接</h3>
+<a class="post-dummy-target" id="disconnect14"></a><h4>Disconnect(<code>14</code>)</h4>
 <p>  当客户端主动断开连接时，主动发送<code>Disconnect</code>消息，该消息无<code>Varibale Header</code>与<code>Payload</code>。</p>
 <hr>
-<a class="post-dummy-target" id="heading-11"></a><h2>服务质量保证</h2>
+<a class="post-dummy-target" id="服务质量保证"></a><h2>服务质量保证</h2>
 <p>  MQTT发布消息QoS保证不是端到端的，是客户端与服务器之间的。订阅者收到MQTT消息的QoS级别，最终取决于发布消息的QoS和主题订阅的QoS。</p>
 <table>
 <thead>
@@ -530,22 +455,10 @@
 </tbody>
 </table>
 <blockquote>
-<p>  总而言之，言而总之，最终的QOS级别为两者中保证较弱的一方的QOS。</p>
+<p>  总而言之，言而总之，最终的QOS级别为两者中保证较弱的一方的QOS。即 <code>qos = min(qos Publisher, qos Subscriber)</code></p>
 </blockquote>
 <a class="post-dummy-target" id="qos-0"></a><h3>Qos 0</h3>
-<p>  Qos 0只会投递一次，没有任何到达的保证，数据从<code>Publisher</code>到<code>Broker</code>，再从<code>Broker</code>到<code>Subscriber</code>均为一次发送，<strong>适合一些不那么重要的数据。</strong>
-
-<div class="mermaid">
-sequenceDiagram
-    participant Publisher
-    participant Broker
-    participant Subscriber
-    Publisher->>Broker: Publish
-    Publisher->>Publisher: Delete(Msg)
-    Broker->>Subscriber: Publish
-    Broker->>Broker: Delete(Msg)
-</div>
-</p>
+<p>  Qos 0只会投递一次，没有任何到达的保证，数据从<code>Publisher</code>到<code>Broker</code>，再从<code>Broker</code>到<code>Subscriber</code>均为一次发送，<strong>适合一些不那么重要的数据。</strong></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -568,23 +481,26 @@ sequenceDiagram
     Broker-&gt;&gt;Broker: Delete(Msg)
 </code></pre></td></tr></table>
 </div>
-</div><a class="post-dummy-target" id="qos-1"></a><h3>Qos 1</h3>
-
-<div class="mermaid">
-sequenceDiagram
-    participant Publisher
-    participant Broker
-    participant Subscriber
-    Publisher->>Publisher: Store(Msg)
-    Publisher->>Broker: Publish (msg_id = x)
-    Broker->>Broker: Store(Msg)
-    Broker->>Subscriber: Publish (msg_id = y)
-    Broker->>Publisher: Puback (msg_id = x)
-    Publisher->>Publisher: Delete(Msg)
-    Subscriber->>Broker: Puback (msg_id = y)
-    Broker->>Broker: Delete(Msg)
-</div>
-
+</div><p><figure><img src="/svg/loading.min.svg" data-sizes="auto" data-src="https://i.loli.net/2020/02/29/cXZ45FINCKp2nlw.png" alt="QOS 0" class="lazyload"><figcaption class="image-caption">QOS 0</figcaption></figure></p>
+<a class="post-dummy-target" id="qos-1"></a><h3>Qos 1</h3>
+<p>  相对于Qos 0，Qos 1多了一次Ack的机制，publish-&gt;ack，发布完一条消息后，本地并不会马上删除，而是存储到一个inflight队列中并等待ack的到来，peer收到qos 1的消息后，马上进行ack操作，同时将消息提供给上游业务来处理，上游业务需要自行去重。后续的处理分为以下几种情况：</p>
+<ul>
+<li>及时收到ack，删除本地inflight队列中数据即可。</li>
+<li>未能收到ack，分为以下几种情况：</li>
+<li>
+<ul>
+<li>publish失败，只需重新发送即可。</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>ack丢失，重新发送，服务端进行ack，上游业务去重。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>对于Qos1/2的消息，通常来说，pending状态的消息是有上限的，当达到上限时，可以丢弃掉消息，并且告知本地的上游业务。</p>
+</blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -615,247 +531,105 @@ sequenceDiagram
     Broker-&gt;&gt;Broker: Delete(Msg)
 </code></pre></td></tr></table>
 </div>
-</div><a class="post-dummy-target" id="qos-2"></a><h3>Qos 2</h3>
-
-<div class="mermaid">
-sequenceDiagram
+</div><p><figure><img src="/svg/loading.min.svg" data-sizes="auto" data-src="https://i.loli.net/2020/02/29/K3IQy6fcdpgnYmU.png" alt="QOS 1" class="lazyload"><figcaption class="image-caption">QOS 1</figcaption></figure></p>
+<a class="post-dummy-target" id="qos-2"></a><h3>Qos 2</h3>
+<p>  Qos2，恰好一次是最理想的状态，然后现实中因为各种各样的问题，是很难100%实现的，因此我们就需要各种协议来尽可能的保证恰好一次的语义，相对于Qos1，Qos2保证了恰好一次，Qos1只能保证至少一次，消息的去重需要上游业务处理，Qos2保证丢给上游业务的消息也是恰好一次的。</p>
+<p>  在Qos1中，客户端需要根据不同的情况进行多次重试，Subscriber一旦收到任何消息后就会把消息传递给上游，在Qos2中，我们希望Publisher可以知道Subscriber已经收到消息了，但是先不要投递给上游的业务（一旦投递给上游后，但Publisher并不知道Subscriber已经收到消息了，可能会造成多次的投递），因此当Subscriber收到消息后，回复一次我已经收到了（Pubrec），Publisher收到回复后，知道Subscriber已经收到消息，接下来告知Subscriber可以把消息提交给上游了（Pubrel），Subscriber收到Pubrel后，将消息提交到上游，并且告知Publisher完成投递（Pubcomp），Publisher收到消息后，知道投递完成，删除本地的消息。</p>
+<p>  这个过程有没有感觉和分布式事务中的2PC非常类似，第一阶段（Prepare），第二阶段（Commit）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">sequenceDiagram
     participant Publisher
     participant Broker
     participant Subscriber
-    Publisher->>Publisher: Store(Msg)
-    Publisher->>Broker: Publish
-    Broker->>Broker: Store(Msg)
-    Broker->>Publisher: Pubrec
-    Publisher->>Broker: Pubrel
-    Broker->>Subscriber: Publish
-    Broker->>Publisher: Pubcomp
-    Publisher->>Publisher: Delete(Msg)
-    Subscriber->>Subscriber: Store(Msg)
-    Subscriber->>Broker: Pubrec
-    Broker->>Subscriber: Pubrel
-    Subscriber->>Subscriber: Notify(Msg)
-    Subscriber->>Broker: Pubcomp
-    Broker->>Broker: Delete(Msg)
-    Subscriber->>Subscriber: Delete(Msg)
+    Publisher-&gt;&gt;Publisher: Store(Msg)
+    Publisher-&gt;&gt;Broker: Publish
+    Broker-&gt;&gt;Broker: Store(Msg)
+    Broker-&gt;&gt;Publisher: Pubrec
+    Publisher-&gt;&gt;Broker: Pubrel
+    Broker-&gt;&gt;Subscriber: Publish
+    Broker-&gt;&gt;Publisher: Pubcomp
+    Publisher-&gt;&gt;Publisher: Delete(Msg)
+    Subscriber-&gt;&gt;Subscriber: Store(Msg)
+    Subscriber-&gt;&gt;Broker: Pubrec
+    Broker-&gt;&gt;Subscriber: Pubrel
+    Subscriber-&gt;&gt;Subscriber: Notify(Msg)
+    Subscriber-&gt;&gt;Broker: Pubcomp
+    Broker-&gt;&gt;Broker: Delete(Msg)
+    Subscriber-&gt;&gt;Subscriber: Delete(Msg)
+</code></pre></td></tr></table>
 </div>
-
-
-        </div>
-
-        <div class="post-footer" id="post-footer">
+</div><p><figure><img src="/svg/loading.min.svg" data-sizes="auto" data-src="https://i.loli.net/2020/02/29/BNHLKZSbOvcWzsm.png" alt="QOS 2" class="lazyload"><figcaption class="image-caption">QOS 2</figcaption></figure></p>
+</div><div class="post-footer" id="post-footer">
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
                 <span>本文于 2019-12-16 更新</span>
             </div>
-            <div class="post-info-license">
-                
-            </div>
+            <div class="post-info-license"></div>
         </div>
         <div class="post-info-line">
-            <div class="post-info-md">
-                
-            </div>
-            <div class="post-info-share">
-                
-                    <span>
-    
-        <a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-protocol%2f&amp;text=Mqtt%e5%8d%8f%e8%ae%ae%e8%a7%a3%e6%9e%90&amp;via=" target="_blank" title="Share on Twitter">
+            <div class="post-info-md"></div>
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-protocol%2f&amp;text=Mqtt%e5%8d%8f%e8%ae%ae%e8%a7%a3%e6%9e%90&amp;via=xxxx" target="_blank" title="分享到 Twitter">
             <i class="fab fa-twitter fa-fw"></i>
-        </a>
-    
-    
-        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-protocol%2f" target="_blank" title="Share on Facebook">
+        </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-protocol%2f" target="_blank" title="分享到 Facebook">
             <i class="fab fa-facebook-square fa-fw"></i>
-        </a>
-    
-    
-        <a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-protocol%2f&amp;title=Mqtt%e5%8d%8f%e8%ae%ae%e8%a7%a3%e6%9e%90" target="_blank" title="Share on Reddit">
+        </a><a href="//reddit.com/submit?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-protocol%2f&amp;title=Mqtt%e5%8d%8f%e8%ae%ae%e8%a7%a3%e6%9e%90" target="_blank" title="分享到 Reddit">
             <i class="fab fa-reddit fa-fw"></i>
-        </a>
-    
-    
-    
-    
-    
-    
-    
-    
-</span>
-                
-            </div>
+        </a></span></div>
         </div>
     </div>
 
     <div class="post-info-more">
-        <section>
-            
-                
-                    <span class="tag">
-                        <a href="https://leaxoy.github.io/tags/mqtt/"><i class="fas fa-tag fa-fw"></i>MQTT</a>
-                    </span>
-                
-            
-        </section>
+        <section><span class="tag">
+                        <a href="https://leaxoy.github.io/tags/mqtt/"><i class="fas fa-tag fa-fw"></i>&nbsp;MQTT</a>&nbsp;
+                    </span></section>
         <section>
             <span><a href="javascript:window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="https://leaxoy.github.io/">主页</a></span>
         </section>
     </div>
 
-    <div class="post-nav">
-        
-            <a href="https://leaxoy.github.io/2019/12/concurrent-model-overview/" class="prev" rel="prev" title="并发模型解析"><i class="fas fa-angle-left fa-fw"></i>并发模型解析</a>
-        
-        
-            <a href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" class="next" rel="next" title="Go实现Mqtt broker">Go实现Mqtt broker<i class="fas fa-angle-right fa-fw"></i></a>
-        
-    </div>
-</div>
-
-        <div class="post-comment">
-            
-            
-
-            
-        </div>
+    <div class="post-nav"><a href="https://leaxoy.github.io/2019/12/concurrent-model-overview/" class="prev" rel="prev" title="并发模型解析"><i class="fas fa-angle-left fa-fw"></i>并发模型解析</a>
+            <a href="https://leaxoy.github.io/2019/12/mqtt-implement-in-go/" class="next" rel="next" title="Go实现Mqtt broker">Go实现Mqtt broker<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div><div class="post-comment"></div>
     </article></div>
-            </main>
-            <footer class="footer">
-    <div class="copyright">
-        <div class="copyright-line">
-            由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动&nbsp;|&nbsp;主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+            </main><footer class="footer">
+    <div class="copyright"><div class="copyright-line">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
         </div>
-        <div class="copyright-line">
-            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/">李大辉</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+
+        <div class="copyright-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2019 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://leaxoy.github.io/" target="_blank">李大辉</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
     </div>
-</footer>
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-
-    
-    
-
-
-
-    
-    
-
-
-
-
-
-    
-    
-
-
-<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
-<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
-<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
-
-
-    
-    
-
-    
-        <script src="/js/lib/mermaid/mermaid.min.min.js"></script><script>mermaid.initialize({startOnLoad: true, theme: null,});</script>
-    
-
-    
-        <link rel="stylesheet" href="/css/lib/katex/katex.min.min.css"><script src="/js/lib/katex/katex.min.min.js"></script><script defer src="/js/lib/katex/auto-render.min.min.js" onload="renderMathInElement(document.body);"></script>
-    
-
-    
-
-    
-
-
-
-
-
-
-<script src="/js/blog.min.js"></script>
-
-
-    
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-66543901-1', 'auto');
-	ga('set', 'anonymizeIp', true);
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
-</div>
-        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
-    </body>
+</footer></div><a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll>
+            <span>&nbsp;</span>
+        </a><script src="/js/lib/jquery/jquery.slim.min.js"></script><script src="/js/lib/lazysizes/lazysizes.min.js"></script><script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script><link rel="stylesheet" href="/css/lib/katex/katex.min.css"><script src="/js/lib/katex/katex.min.js"></script><script defer src="/js/lib/katex/auto-render.min.js"></script><link rel="stylesheet" href="/css/lib/katex/copy-tex.min.css"><script defer src="/js/lib/katex/copy-tex.min.js"></script><script defer src="/js/lib/katex/mhchem.min.js"></script><script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true },{ left: "$", right: "$", display: false },]
+            });
+        });
+    </script><script src="/js/blog.min.js"></script></body>
 </html>

@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant Publisher
+    participant Broker
+    participant Subscriber
+    Publisher->>Publisher: Store(Msg)
+    Publisher->>Broker: Publish
+    Broker->>Broker: Store(Msg)
+    Broker->>Publisher: Pubrec
+    Publisher->>Broker: Pubrel
+    Broker->>Subscriber: Publish
+    Broker->>Publisher: Pubcomp
+    Publisher->>Publisher: Delete(Msg)
+    Subscriber->>Subscriber: Store(Msg)
+    Subscriber->>Broker: Pubrec
+    Broker->>Subscriber: Pubrel
+    Subscriber->>Subscriber: Notify(Msg)
+    Subscriber->>Broker: Pubcomp
+    Broker->>Broker: Delete(Msg)
+    Subscriber->>Subscriber: Delete(Msg)
