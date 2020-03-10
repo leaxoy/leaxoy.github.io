@@ -103,7 +103,7 @@
 <li>Arrival Service，消息的重发模块，用来实现Qos1/2的服务质量。</li>
 </ul>
 <p>下面的时序图展示了一个客户端和服务器的交互流程，以及服务器端对客户端发送的消息的处理</p>
-<div class="mermaid" id="mermaid-a59fecec8a89c369c0e62b2a027c972f"></div>
+<div class="mermaid" id="mermaid-c10b0670c652e206581c37b3a6ee2d8e"></div>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -168,31 +168,31 @@
     Connection-&gt;&gt;Auth: 读取Connect消息并进行认证
     Auth-&gt;&gt;Connection: 认证完成
     rect rgb(166, 212, 250)
-    	alt 认证失败
+        alt 认证失败
         Connection-&gt;&gt;Client: 返回带有错误码的Connack
-	    else 认证成功
+        else 认证成功
         Connection-&gt;&gt;Client: 正常返回Connack
         Connection-&gt;&gt;Storage: 存储Connection信息
-  	  end
+        end
     end
     rect rgb(246, 165, 192)
-	    loop Read Msg
+        loop Read Msg
         alt Pingreq
             Connection-&gt;&gt;Client: Pingresp
         else Subscribe
             Connection-&gt;&gt;Auth: 依据Topic和Qos进行ACL鉴权认证
             Auth-&gt;&gt;Connection: 认证完成
             rect rgb(0, 255, 0)
-            	alt 鉴权成功
-            		Connection-&gt;&gt;Storage: 存储订阅关系
-            		Connection-&gt;&gt;Client: 返回订阅成功的状态
-	            else 鉴权失败
-            		Connection-&gt;&gt;Client: 返回订阅失败的状态
-  	          end
+                alt 鉴权成功
+                    Connection-&gt;&gt;Storage: 存储订阅关系
+                    Connection-&gt;&gt;Client: 返回订阅成功的状态
+                else 鉴权失败
+                    Connection-&gt;&gt;Client: 返回订阅失败的状态
+                end
             end
         else Unsubscribe
-        		Connection-&gt;&gt;Storage: 删除订阅关系
-        		Connection-&gt;&gt;Client: Unsuback
+                Connection-&gt;&gt;Storage: 删除订阅关系
+                Connection-&gt;&gt;Client: Unsuback
         else Disconnect
             Connection-&gt;&gt;Storage: 删除对应的Connection信息
             Broker-&gt;&gt;Client: 关闭连接
@@ -202,7 +202,7 @@
         else Pubrel
         else Pubcomp
         end
-    	end
+        end
     end
 </code></pre></td></tr></table>
 </div>
@@ -219,7 +219,7 @@
         </div>
         <div class="post-info-line">
             <div class="post-info-md"></div>
-            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f&amp;text=Go%e5%ae%9e%e7%8e%b0Mqtt%20broker&amp;via=xxxx" target="_blank" title="分享到 Twitter">
+            <div class="post-info-share"><span><a href="//twitter.com/share?url=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f&amp;text=Go%e5%ae%9e%e7%8e%b0Mqtt%20broker&amp;via=lidahuiya" target="_blank" title="分享到 Twitter">
             <i class="fab fa-twitter fa-fw"></i>
         </a><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fleaxoy.github.io%2f2019%2f12%2fmqtt-implement-in-go%2f" target="_blank" title="分享到 Facebook">
             <i class="fab fa-facebook-square fa-fw"></i>
@@ -261,5 +261,5 @@
                     { left: "\\[", right: "\\]", display: true },{ left: "$", right: "$", display: false },]
             });
         });
-    </script><script src="/js/lib/mermaid/mermaid.min.js"></script><script>mermaid.initialize({startOnLoad: false, theme: null});</script><script>window.mermaidMap={"mermaid-a59fecec8a89c369c0e62b2a027c972f":"sequenceDiagram\n    participant Client\n    participant Broker\n    participant Connection\n    participant Auth\n    participant Storage\n    Note over Broker: 启动服务并监听端口\n    Client-\u003e\u003eBroker: 连接\n    Broker-\u003e\u003eConnection: 处理新的连接\n    Connection-\u003e\u003eAuth: 读取Connect消息并进行认证\n    Auth-\u003e\u003eConnection: 认证完成\n    alt 认证失败\n        Connection-\u003e\u003eClient: 返回带有错误码的Connack\n    else 认证成功\n        Connection-\u003e\u003eClient: 正常返回Connack\n        Connection-\u003e\u003eStorage: 存储Connection信息\n    end\n    loop Read Msg\n        alt Pingreq\n            Connection-\u003e\u003eClient: Pingresp\n        else Subscribe\n            Connection-\u003e\u003eAuth: 依据Topic和Qos进行ACL鉴权认证\n            Auth-\u003e\u003eConnection: 认证完成\n            alt 鉴权成功\n            \tConnection-\u003e\u003eStorage: 存储订阅关系\n            \tConnection-\u003e\u003eClient: 返回订阅成功的状态\n            else 鉴权失败\n            \tConnection-\u003e\u003eClient: 返回订阅失败的状态\n            end\n        else Unsubscribe\n        \tConnection-\u003e\u003eStorage: 删除订阅关系\n        \tConnection-\u003e\u003eClient: Unsuback\n        else Disconnect\n            Connection-\u003e\u003eStorage: 删除对应的Connection信息\n            Broker-\u003e\u003eClient: 关闭连接\n        else Puback\n        else Pubrec\n        else Pubrel\n        else Pubcomp\n        end\n    end"};</script><script src="/js/blog.min.js"></script></body>
+    </script><script src="/js/lib/mermaid/mermaid.min.js"></script><script>mermaid.initialize({startOnLoad: false, theme: null});</script><script>window.mermaidMap={"mermaid-c10b0670c652e206581c37b3a6ee2d8e":"sequenceDiagram\n    participant Client\n    participant Broker\n    participant Connection\n    participant Auth\n    participant Storage\n    Note over Broker: 启动服务并监听端口\n    Client-\u003e\u003eBroker: 连接\n    Broker-\u003e\u003eConnection: 处理新的连接\n    Connection-\u003e\u003eAuth: 读取Connect消息并进行认证\n    Auth-\u003e\u003eConnection: 认证完成\n    alt 认证失败\n        Connection-\u003e\u003eClient: 返回带有错误码的Connack\n    else 认证成功\n        Connection-\u003e\u003eClient: 正常返回Connack\n        Connection-\u003e\u003eStorage: 存储Connection信息\n    end\n    loop Read Msg\n        alt Pingreq\n            Connection-\u003e\u003eClient: Pingresp\n        else Subscribe\n            Connection-\u003e\u003eAuth: 依据Topic和Qos进行ACL鉴权认证\n            Auth-\u003e\u003eConnection: 认证完成\n            alt 鉴权成功\n                Connection-\u003e\u003eStorage: 存储订阅关系\n                Connection-\u003e\u003eClient: 返回订阅成功的状态\n            else 鉴权失败\n                Connection-\u003e\u003eClient: 返回订阅失败的状态\n            end\n        else Unsubscribe\n            Connection-\u003e\u003eStorage: 删除订阅关系\n            Connection-\u003e\u003eClient: Unsuback\n        else Disconnect\n            Connection-\u003e\u003eStorage: 删除对应的Connection信息\n            Broker-\u003e\u003eClient: 关闭连接\n        else Puback\n        else Pubrec\n        else Pubrel\n        else Pubcomp\n        end\n    end"};</script><script src="/js/blog.min.js"></script></body>
 </html>

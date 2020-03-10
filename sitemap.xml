@@ -2,15 +2,16 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>https://leaxoy.github.io/categories/</loc><lastmod>2019-12-26T12:30:08+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://leaxoy.github.io/categories/</loc><lastmod>2020-03-10T12:37:36+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://leaxoy.github.io/posts/</loc><lastmod>2020-03-10T12:37:36+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://leaxoy.github.io/tags/rust/</loc><lastmod>2020-03-10T12:37:36+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://leaxoy.github.io/categories/rust/</loc><lastmod>2020-03-10T12:37:36+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://leaxoy.github.io/2020/03/rust-async-runtime/</loc><lastmod>2020-03-10T12:37:36+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://leaxoy.github.io/tags/</loc><lastmod>2020-03-10T12:37:36+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://leaxoy.github.io/tags/%E5%B9%B6%E5%8F%91/</loc><lastmod>2020-03-10T12:37:36+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://leaxoy.github.io/tags/go/</loc><lastmod>2019-12-26T12:30:08+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://leaxoy.github.io/2019/12/go-concurrent-saft-and-unsafe/</loc><lastmod>2019-12-26T12:30:08+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://leaxoy.github.io/posts/</loc><lastmod>2019-12-26T12:30:08+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://leaxoy.github.io/categories/system/</loc><lastmod>2019-12-26T12:30:08+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://leaxoy.github.io/tags/</loc><lastmod>2019-12-26T12:30:08+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://leaxoy.github.io/tags/%E5%B9%B6%E5%8F%91/</loc><lastmod>2019-12-26T12:30:08+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://leaxoy.github.io/tags/rust/</loc><lastmod>2019-12-16T20:19:16+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>https://leaxoy.github.io/categories/rust/</loc><lastmod>2019-12-16T20:19:16+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://leaxoy.github.io/2019/12/rust-startup/</loc><lastmod>2019-12-16T20:19:16+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://leaxoy.github.io/2019/12/mqtt-implement-in-go/</loc><lastmod>2019-12-16T15:26:29+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
             <loc>https://leaxoy.github.io/tags/mqtt/</loc><lastmod>2019-12-16T15:26:29+08:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
