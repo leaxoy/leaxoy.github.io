@@ -49,6 +49,7 @@ sequenceDiagram
     activate Executor
     deactivate Executor
 ```
+![rust-future](https://i.loli.net/2020/03/10/4Vst3WkrgJmw6G2.png)
 
 上面说明了一个简单的`Future`的执行，如果是一个比较复杂的`Future`的话，比如中间会有多次`IO`操作的话，那么流程时怎么样的呢？看下面一段代码：(仅仅作为demo，不代表可以直接使用)
 
@@ -81,7 +82,7 @@ sequenceDiagram
     deactivate Reactor
     Reactor->>Executor: w.write_all() is ready
 ```
-
+![rust-future-complex](https://i.loli.net/2020/03/10/QYTsVfAuZBHyiEj.png)
 > &emsp;&emsp;上面的这些例子系统中只展示了一个`Future`的执行情况，真实的生产环境中，可能有数十万的`Future`同时在执行，`Executor`和`Reactor`的调度模型要更复杂一些。
 ### 总结
 一句话概括`Runtime`，`Future`不能马上返回值的时候，会被交给`Reactor`，`Future`的值准备就绪后，调用`wake`传递给`Executor`执行，反复执行，直至整个`Future`返回`Ready`。

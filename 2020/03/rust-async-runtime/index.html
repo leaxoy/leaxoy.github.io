@@ -35,7 +35,7 @@
                 "url": "https:\/\/leaxoy.github.io\/cover.png",
                 "width":  800 ,
                 "height":  600 
-            },"genre": "posts","keywords": "rust, 并发","wordcount":  3881 ,
+            },"genre": "posts","keywords": "rust, 并发","wordcount":  3883 ,
         "url": "https:\/\/leaxoy.github.io\/2020\/03\/rust-async-runtime\/","datePublished": "2020-03-10T12:37:36\x2b08:00","dateModified": "2020-03-10T12:37:36\x2b08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
                 "@type": "Organization",
                 "name": "李大辉",
@@ -78,7 +78,7 @@
                     <i class="fas fa-user-circle fa-fw"></i>李大辉
                 </a>&nbsp;<span class="post-category">收录于&nbsp;<i class="far fa-folder fa-fw"></i><a href="https://leaxoy.github.io/categories/rust/">Rust</a>&nbsp;</span></div>
             <div class="post-meta-other"><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-03-10>2020-03-10</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>约 3881 字&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>约 3883 字&nbsp;
                 <i class="far fa-clock fa-fw"></i>预计阅读 8 分钟&nbsp;</div>
         </div><div class="post-toc" id="post-toc">
                 <h2 class="post-toc-title">目录</h2>
@@ -210,7 +210,8 @@
     deactivate Executor
 </code></pre></td></tr></table>
 </div>
-</div><p>上面说明了一个简单的<code>Future</code>的执行，如果是一个比较复杂的<code>Future</code>的话，比如中间会有多次<code>IO</code>操作的话，那么流程时怎么样的呢？看下面一段代码：(仅仅作为demo，不代表可以直接使用)</p>
+</div><p><figure><img src="/svg/loading.min.svg" data-sizes="auto" data-src="https://i.loli.net/2020/03/10/4Vst3WkrgJmw6G2.png" alt="rust-future" class="lazyload"><figcaption class="image-caption">rust-future</figcaption></figure></p>
+<p>上面说明了一个简单的<code>Future</code>的执行，如果是一个比较复杂的<code>Future</code>的话，比如中间会有多次<code>IO</code>操作的话，那么流程时怎么样的呢？看下面一段代码：(仅仅作为demo，不代表可以直接使用)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -268,7 +269,8 @@
     Reactor-&gt;&gt;Executor: w.write_all() is ready
 </code></pre></td></tr></table>
 </div>
-</div><blockquote>
+</div><p><figure><img src="/svg/loading.min.svg" data-sizes="auto" data-src="https://i.loli.net/2020/03/10/QYTsVfAuZBHyiEj.png" alt="rust-future-complex" class="lazyload"><figcaption class="image-caption">rust-future-complex</figcaption></figure></p>
+<blockquote>
 <p>  上面的这些例子系统中只展示了一个<code>Future</code>的执行情况，真实的生产环境中，可能有数十万的<code>Future</code>同时在执行，<code>Executor</code>和<code>Reactor</code>的调度模型要更复杂一些。</p>
 </blockquote>
 <a class="post-dummy-target" id="总结"></a><h3>总结</h3>

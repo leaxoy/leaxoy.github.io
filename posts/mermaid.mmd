@@ -1,19 +1,16 @@
 sequenceDiagram
-    participant Publisher
-    participant Broker
-    participant Subscriber
-    Publisher->>Publisher: Store(Msg)
-    Publisher->>Broker: Publish
-    Broker->>Broker: Store(Msg)
-    Broker->>Publisher: Pubrec
-    Publisher->>Broker: Pubrel
-    Broker->>Subscriber: Publish
-    Broker->>Publisher: Pubcomp
-    Publisher->>Publisher: Delete(Msg)
-    Subscriber->>Subscriber: Store(Msg)
-    Subscriber->>Broker: Pubrec
-    Broker->>Subscriber: Pubrel
-    Subscriber->>Subscriber: Notify(Msg)
-    Subscriber->>Broker: Pubcomp
-    Broker->>Broker: Delete(Msg)
-    Subscriber->>Subscriber: Delete(Msg)
+    participant Executor
+    participant Reactor
+    activate Executor
+    deactivate Executor
+    Executor->>Reactor: Pending on r.read()
+    Note left of Executor: Execute other Future
+    activate Reactor
+    Reactor->>Executor: r.read() is ready
+    Note left of Executor: Execute current Future
+    deactivate Reactor
+    Executor->>Reactor: Pending on w.write_all()
+    Note left of Executor: Execute other Future
+    activate Reactor
+    deactivate Reactor
+    Reactor->>Executor: w.write_all() is ready
