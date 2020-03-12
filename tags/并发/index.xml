@@ -18,7 +18,7 @@
       <pubDate>Tue, 10 Mar 2020 12:37:36 +0800</pubDate>
       
       <guid>https://leaxoy.github.io/2020/03/rust-async-runtime/</guid>
-      <description>前提 这篇文章主要描述了Rust中异步的原理，Rust异步也是在最近的版本中(1.39)中才稳定下来。希望可以通过这边文章在提高自己认知的情况</description>
+      <description>前提 这篇文章主要描述了Rust中异步的原理与相关的实现，Rust异步也是在最近的版本(1.39)中才稳定下来。希望可以通过这边文章在提高自己</description>
     </item>
     
     <item>
