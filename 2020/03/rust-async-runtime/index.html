@@ -156,7 +156,7 @@
 <p>  老生常谈，几乎所有的语言中异步相关的解释都是统一的：<strong>线程切换开销大，且资源浪费（主要集中在内存上）</strong>，这篇文章假定读者已对这些情况已知晓。</p>
 <a class="post-dummy-target" id="future"></a><h2>Future</h2>
 <p>  <code>Future</code> 字面的意思就是未来发生的事情，在程序中则代表了一系列暂时没有结果的运算子，<code>Future</code>需要程序主动去<code>poll</code>(轮询)才能获取到最终的结果，每一次轮询的结果可能是<code>Ready</code>或者<code>Pending</code>。</p>
-<p>  当<code>Ready</code>的时候，证明当前<code>Future</code>已完成，代码逻辑可以向下执行；当<code>Pending</code>的时候，代表当前<code>Future</code>并未执行完成，代码不能向下执行，看到这里就要问了，那什么时候才能向下执行呢，这里的关键在于<code>Runtime</code>中的<code>Executor</code>需要不停的去执行<code>Future</code>的<code>poll</code>操作，直至<code>Future</code>返回<code>Ready</code>可以向下执行为止。等等，熟悉<code>Linux</code>的同学可能要说了，怎么感觉和<code>Epoll</code>模型是非常的相似呢，没错，这确实非常相像(但是依然有些许不通，<code>Future</code>可以避免空的轮询)，看样子优秀的设计在哪里都可以看到类似的身影。为了实现Rust声称的高性能与零开销抽象，这里做了一些优化，下面一一讲述。</p>
+<p>  当<code>Ready</code>的时候，证明当前<code>Future</code>已完成，代码逻辑可以向下执行；当<code>Pending</code>的时候，代表当前<code>Future</code>并未执行完成，代码不能向下执行，看到这里就要问了，那什么时候才能向下执行呢，这里的关键在于<code>Runtime</code>中的<code>Executor</code>需要不停的去执行<code>Future</code>的<code>poll</code>操作，直至<code>Future</code>返回<code>Ready</code>可以向下执行为止。等等，熟悉<code>Linux</code>的同学可能要说了，怎么感觉和<code>Epoll</code>模型是非常的相似呢，没错，这确实非常相像(但是依然有些许不同，<code>Future</code>可以避免空的轮询)，看样子优秀的设计在哪里都可以看到类似的身影。为了实现Rust声称的高性能与零开销抽象，这里做了一些优化，下面一一讲述。</p>
 <a class="post-dummy-target" id="future结构"></a><h3>Future结构</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -316,7 +316,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><p><figure><img src="/svg/loading.min.svg" data-sizes="auto" data-src="https://i.loli.net/2020/03/10/4Vst3WkrgJmw6G2.png" alt="rust-future" class="lazyload"><figcaption class="image-caption">rust-future</figcaption></figure></p>
-<p>上面说明了一个简单的<code>Future</code>的执行，如果是一个比较复杂的<code>Future</code>的话，比如中间会有多次<code>IO</code>操作的话，那么流程时怎么样的呢？看下面一段代码：(仅仅作为demo，不代表可以直接使用)</p>
+<p>上面说明了一个简单的<code>Future</code>的执行，如果是一个比较复杂的<code>Future</code>的话，比如中间会有多次<code>IO</code>操作的话，那么流程是怎么样的呢？看下面一段代码：(仅仅作为demo，不代表可以直接使用)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
